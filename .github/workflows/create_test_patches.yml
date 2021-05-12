@@ -24,13 +24,19 @@ jobs:
     name: Create patch-package Patches
     runs-on: ubuntu-latest
     steps:
+      - uses: styfle/cancel-workflow-action@0.9.0
+        with:
+          all_but_latest: true
+
       - uses: actions/checkout@v2
 
       # Future ideas:
       # - make into an action, parameterize directories to pack, and package names to install
       # - name patches w/PR as "semver prerelease" and SHA as "semver build info". Needs patch-package enhancement.
 
-      - uses: actions/setup-node@v2-beta
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
@@ -41,10 +47,11 @@ jobs:
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/package.json') }}-v1
+          key: ${{ runner.os }}-yarn-v1-${{ hashFiles('**/package.json') }}
+          restore-keys: ${{ runner.os }}-yarn-v1
 
       - name: Yarn Install
-        uses: nick-invision/retry@v1
+        uses: nick-invision/retry@v2
         with:
           timeout_minutes: 10
           retry_wait_seconds: 60
@@ -73,8 +80,9 @@ jobs:
             echo "Installing package $PACKAGE into fresh template app, then clobbering with PR version"
             yarn add @react-native-firebase/$PACKAGE
             pushd node_modules/@react-native-firebase
-            \rm -fr $PACKAGE
             tar -zxf $HOME/packages/react-native-firebase-${PACKAGE}-v*
+            mv $PACKAGE/package.json package/
+            \rm -fr $PACKAGE
             mv package $PACKAGE
             popd
             npx patch-package @react-native-firebase/$PACKAGE || true

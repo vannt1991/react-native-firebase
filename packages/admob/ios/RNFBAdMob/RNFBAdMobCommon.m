@@ -49,7 +49,7 @@ NSString *const ADMOB_EVENT_REWARDED_EARNED_REWARD = @"rewarded_earned_reward";
     GADRequest *request = [GADRequest request];
     NSMutableDictionary *extras = [@{} mutableCopy];
 
-    if (adRequestOptions[@"requestNonPersonalizedAdsOnly"]) {
+    if (adRequestOptions[@"requestNonPersonalizedAdsOnly"] && [adRequestOptions[@"requestNonPersonalizedAdsOnly"] boolValue]) {
         extras[@"npa"] = @"1";
     }
 
@@ -181,6 +181,9 @@ NSString *const ADMOB_EVENT_REWARDED_EARNED_REWARD = @"rewarded_earned_reward";
         return kGADAdSizeLeaderboard;
     } else if ([value isEqualToString:@"SMART_BANNER"]) {
         return kGADAdSizeSmartBannerPortrait;
+    } else if ([value isEqualToString:@"ADAPTIVE_BANNER"]) {
+        CGFloat viewWidth = [[UIScreen mainScreen]bounds].size.width;
+        return GADCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(viewWidth);
     } else {
         return kGADAdSizeBanner;
     }

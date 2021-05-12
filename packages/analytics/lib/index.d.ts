@@ -99,7 +99,18 @@ export namespace FirebaseAnalyticsTypes {
      * The Item variant.
      */
     item_variant?: string;
+    /**
+     * The Item quantity.
+     */
+    quantity?: number;
+    /**
+     * The Item price.
+     * Note that firebase analytics will display this as an integer with trailing zeros, due to some firebase-internal conversion.
+     * See https://github.com/invertase/react-native-firebase/issues/4578#issuecomment-771703420 for more information
+     */
+    price?: number;
   }
+
   export interface AddPaymentInfoEventParameters {
     items?: Item[];
     /**
@@ -664,39 +675,6 @@ export namespace FirebaseAnalyticsTypes {
     setAnalyticsCollectionEnabled(enabled: boolean): Promise<void>;
 
     /**
-     * Sets the current screen name.
-     *
-     * #### Example
-     *
-     * ```js
-     * await firebase.analytics().setCurrentScreen('ProductScreen', 'ProductScreen');
-     * ```
-     *
-     * > Whilst screenClassOverride is optional, it is recommended it is
-     * always sent as your current class name. For example on Android it will always
-     * show as 'MainActivity' if you do not specify it.
-     *
-     * @param screenName A screen name, e.g. Product.
-     * @param screenClassOverride On Android, React Native runs in a single activity called
-     *        'MainActivity'. Setting this parameter overrides the default name shown on logs.
-     * @deprecated
-     */
-    setCurrentScreen(screenName: string, screenClassOverride?: string): Promise<void>;
-    /**
-     * Sets the minimum engagement time required before starting a session.
-     *
-     * #### Example
-     *
-     * ```js
-     * // 20 seconds
-     * await firebase.analytics().setMinimumSessionDuration(20000);
-     * ```
-     *
-     * @param milliseconds The default value is 10000 (10 seconds).
-     */
-    setMinimumSessionDuration(milliseconds?: number): Promise<void>;
-
-    /**
      * Sets the duration of inactivity that terminates the current session.
      *
      * #### Example
@@ -709,6 +687,19 @@ export namespace FirebaseAnalyticsTypes {
      * @param milliseconds The default value is 1800000 (30 minutes).
      */
     setSessionTimeoutDuration(milliseconds?: number): Promise<void>;
+
+    /**
+     * Retrieve the app instance id of the application.
+     *
+     * #### Example
+     *
+     * ```js
+     * const appInstanceId = await firebase.analytics().getAppInstanceId();
+     * ```
+     *
+     * @returns Returns the app instance id or null on android if FirebaseAnalytics.ConsentType.ANALYTICS_STORAGE has been set to FirebaseAnalytics.ConsentStatus.DENIED and null on iOS if ConsentType.analyticsStorage has been set to ConsentStatus.denied.
+     */
+    getAppInstanceId(): Promise<string | null>;
 
     /**
      * Gives a user a unique identification.
@@ -1213,7 +1204,7 @@ export namespace FirebaseAnalyticsTypes {
      * can help you identify popular content and categories of content in your app.
      *
      * Logged event name: `select_content`
-     *ana
+     *
      * #### Example
      *
      * ```js
@@ -1227,19 +1218,24 @@ export namespace FirebaseAnalyticsTypes {
      */
     logSelectContent(params: SelectContentEventParameters): Promise<void>;
     /**
-     * Select Content event. This general purpose event signifies that a user has selected some
-     * content of a certain type in an app. The content can be any object in your app. This event
-     * can help you identify popular content and categories of content in your app.
+     * Select Item event. This event signifies that an item was selected by a user from a list.
+     * Use the appropriate parameters to contextualize the event.
+     * Use this event to discover the most popular items selected.
      *
-     * Logged event name: `select_content`
-     *ana
+     * Logged event name: `select_item`
+     *
      * #### Example
      *
      * ```js
      * await firebase.analytics().logSelectItem({
      *  item_list_id: '54690834',
-     *  item_list_name: 'purple baseball cap',
-     *  content_type: 'cap',
+     *  item_list_name: 't-shirts',
+     *  items: [{
+     *     item_brand: 'cool-shirt-brand',
+     *     item_id: '23456',
+     *     item_name: 'orange t-shirt',
+     *     item_category: 'round necked t-shirts',
+     *   }]
      * });
      * ```
      *
@@ -1262,7 +1258,7 @@ export namespace FirebaseAnalyticsTypes {
      *
      * @param params See {@link analytics.SetCheckoutOptionEventParameters}.
      */
-    logSetCheckoutOption(params: SetCheckoutOptionEventParameters): Promise<void>;
+    logSetCheckoutOption(params: any): Promise<void>;
 
     /**
      * Share event. Apps with social features can log the Share event to identify the most viral content.
@@ -1477,29 +1473,48 @@ export namespace FirebaseAnalyticsTypes {
      * @param params See {@link analytics.ViewSearchResultsParameters}.
      */
     logViewSearchResults(params: ViewSearchResultsParameters): Promise<void>;
+
+    /**
+     * Adds parameters that will be set on every event logged from the SDK, including automatic ones.
+     *
+     * #### Example
+     *
+     * ```js
+     * await firebase.analytics().setDefaultEventParameters({
+     *   userId: '1234',
+     * });
+     * ```
+     *
+     *
+     * @param params Parameters to be added to the map of parameters added to every event.
+     * They will be added to the map of default event parameters, replacing any existing
+     * parameter with the same name. Valid parameter values are String, long, and double.
+     * Setting a key's value to null will clear that parameter. Passing in a null bundle
+     * will clear all parameters.
+     */
+    setDefaultEventParameters(params?: { [key: string]: any }): Promise<void>;
   }
 }
 
-declare module '@react-native-firebase/analytics' {
-  // tslint:disable-next-line:no-duplicate-imports required otherwise doesn't work
-  import { ReactNativeFirebase } from '@react-native-firebase/app';
-  import ReactNativeFirebaseModule = ReactNativeFirebase.Module;
-  import FirebaseModuleWithStatics = ReactNativeFirebase.FirebaseModuleWithStatics;
+declare const defaultExport: ReactNativeFirebase.FirebaseModuleWithStatics<
+  FirebaseAnalyticsTypes.Module,
+  FirebaseAnalyticsTypes.Statics
+>;
 
-  const firebaseNamedExport: {} & ReactNativeFirebaseModule;
-  export const firebase = firebaseNamedExport;
+export const firebase: ReactNativeFirebase.Module & {
+  analytics: typeof defaultExport;
+  app(
+    name?: string,
+  ): ReactNativeFirebase.FirebaseApp & { analytics(): FirebaseAnalyticsTypes.Module };
+};
 
-  const defaultExport: FirebaseModuleWithStatics<
-    FirebaseAnalyticsTypes.Module,
-    FirebaseAnalyticsTypes.Statics
-  >;
-  export default defaultExport;
-}
+export default defaultExport;
 
 /**
  * Attach namespace to `firebase.` and `FirebaseApp.`.
  */
 declare module '@react-native-firebase/app' {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   namespace ReactNativeFirebase {
     import FirebaseModuleWithStatics = ReactNativeFirebase.FirebaseModuleWithStatics;
     interface Module {
@@ -1512,33 +1527,5 @@ declare module '@react-native-firebase/app' {
     interface FirebaseApp {
       analytics(): FirebaseAnalyticsTypes.Module;
     }
-  }
-}
-
-namespace ReactNativeFirebase {
-  interface FirebaseJsonConfig {
-    /**
-     * Disable or enable auto collection of analytics data.
-     *
-     * This is useful for opt-in-first data flows, for example when dealing with GDPR compliance.
-     * This can be overridden in JavaScript.
-     *
-     * #### Example
-     *
-     * ```json
-     * // <project-root>/firebase.json
-     * {
-     *   "react-native": {
-     *     "analytics_auto_collection_enabled": false
-     *   }
-     * }
-     * ```
-     *
-     * ```js
-     * // Re-enable analytics data collection, e.g. once user has granted permission:
-     * await firebase.analytics().setAnalyticsCollectionEnabled(true);
-     * ```
-     */
-    analytics_auto_collection_enabled: boolean;
   }
 }

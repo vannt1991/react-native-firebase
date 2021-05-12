@@ -38,8 +38,11 @@ const Link = ({
   activeClass = false,
   partiallyActiveClass = false,
   ...other
-}: Props) => {
-  function shouldHaveActiveClass({ isCurrent, isPartiallyCurrent }: LinkGetProps): object {
+}: Props): JSX.Element => {
+  function shouldHaveActiveClass({
+    isCurrent,
+    isPartiallyCurrent,
+  }: LinkGetProps): { className?: string } {
     if (activeClass && isCurrent) return { className: 'active' };
     if (partiallyActiveClass && isPartiallyCurrent) return { className: 'active' };
     return {};
@@ -69,7 +72,7 @@ const Link = ({
       to,
     };
 
-    if (gatsbyLinkProps.to.endsWith('/')) {
+    if (gatsbyLinkProps.to.endsWith('/') && gatsbyLinkProps.to.length > 1) {
       gatsbyLinkProps.to = gatsbyLinkProps.to.slice(0, -1);
     }
 

@@ -9,7 +9,6 @@ We welcome any type of contribution, not just code. You can help with;
   - At the top of every page on our docs site you can click the `Edit Page` button to go to that pages markdown file or TypeScript definition file, or view the [documents](https://github.com/invertase/react-native-firebase/tree/master/docs) directly
 - **Community**: presenting the project at meetups, organizing a dedicated meetup for the local community, ...
 - **Code**: take a look at the [open issues](issues). Even if you can't write code, commenting on them, showing that you care about a given issue matters.
-- **Donations**: we welcome financial contributions in full transparency on our [open collective](https://opencollective.com/react-native-firebase).
 
 ---
 
@@ -118,7 +117,21 @@ The project supports JS only testing through Jest. The following package scripts
 
 ### End-to-end Testing
 
-The project has a Detox powered `e2e` testing app located in `/tests`.
+The project has a Detox powered end-to-end testing app located in `/tests`.
+
+To run end-to-end tests for `Android`, please run:
+
+- `yarn tests:android:build` - builds `Android` test application.
+- `yarn tests:packager:jet-reset-cache` - runs JavaScript bundler.
+- `yarn tests:emulator:start` - runs Firestore emulator for Firestore tests.
+- `yarn tests:android:test` - runs tests using Detox library. Tests for each package can be found in the `e2e` directory (i.e. `[PACKAGE]/e2e/*.e2e.js`)
+
+To run end-to-end tests for `iOS`, please run:
+
+- `yarn tests:ios:build` - builds `iOS` test application.
+- `yarn tests:packager:jet-reset-cache` - runs JavaScript bundler.
+- `yarn tests:emulator:start` - runs Firestore emulator for Firestore tests.
+- `yarn tests:ios:test` - runs tests using Detox library. Tests for each package can be found in the `e2e` directory (i.e. `[PACKAGE]/e2e/*.e2e.js`)
 
 See it's local testing guide [here](https://github.com/invertase/react-native-firebase/blob/master/tests/README.md) to get started
 with `e2e` testing this project.

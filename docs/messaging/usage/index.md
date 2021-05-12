@@ -295,6 +295,15 @@ RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
                                              initialProperties:appProperties];
 ```
 
+- For projects that use react-native-navigation (or if you just don't want to mess with your launchProperties) you can use the `getIsHeadless` method (iOS only) from messaging like so:
+
+```jsx
+messaging().getIsHeadless().then(isHeadless => {
+  // do sth with isHeadless
+});
+
+```
+
 
 On Android, the `isHeadless` prop will not exist.
 
@@ -320,7 +329,7 @@ documentation.
 
 #### Subscribing to topics
 
-To subscribe a device, call the `subscribeToTopic` method with the topic name:
+To subscribe a device, call the `subscribeToTopic` method with the topic name (must not include "/"):
 
 ```js
 messaging()
@@ -445,7 +454,9 @@ Note that only predefined colors can be used in `firebase.json`. If you want to 
 </resources>
 
 <!-- <projectRoot>/android/app/src/main/AndroidManifest.xml -->
-<manifest>
+
+<!--  add "tools" to manifest tag  -->
+<manifest xmlns:tools="http://schemas.android.com/tools">
   <application>
       <!-- ... -->
 

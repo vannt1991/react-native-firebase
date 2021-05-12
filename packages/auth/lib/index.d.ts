@@ -52,6 +52,16 @@ export namespace FirebaseAuthTypes {
   import FirebaseModule = ReactNativeFirebase.FirebaseModule;
   import NativeFirebaseError = ReactNativeFirebase.NativeFirebaseError;
 
+  export interface NativeFirebaseAuthError extends NativeFirebaseError {
+    userInfo: {
+      /**
+       *  When trying to sign in or link with an AuthCredential which was already associated with an account,
+       *  you might receive an updated credential (depending of provider) which you can use to recover from the error.
+       */
+      authCredential: AuthCredential | null;
+    };
+  }
+
   /**
    * Interface that represents the credentials returned by an auth provider. Implementations specify the details
    * about each auth provider's credential requirements.
@@ -387,6 +397,10 @@ export namespace FirebaseAuthTypes {
      * Returns the unique identifier of the provider type that this instance corresponds to.
      */
     providerId: string;
+    /**
+     * Returns a string representing the multi-tenant tenant id. This is null if the user is not associated with a tenant.
+     */
+    tenantId?: string;
     /**
      * Returns a user identifier as specified by the authentication provider.
      */
@@ -980,6 +994,7 @@ export namespace FirebaseAuthTypes {
      * @error auth/wrong-password Thrown if the password used in a auth.EmailAuthProvider.credential is not correct or when the user associated with the email does not have a password.
      * @error auth/invalid-verification-code Thrown if the credential is a auth.PhoneAuthProvider.credential and the verification code of the credential is not valid.
      * @error auth/invalid-verification-id Thrown if the credential is a auth.PhoneAuthProvider.credential and the verification ID of the credential is not valid.
+     * @throws on iOS {@link auth.NativeFirebaseAuthError}, on Android {@link auth.NativeFirebaseError}
      * @param credential A created {@link auth.AuthCredential}.
      */
     linkWithCredential(credential: AuthCredential): Promise<UserCredential>;
@@ -1071,6 +1086,7 @@ export namespace FirebaseAuthTypes {
      * const user = firebase.auth().currentUser.toJSON();
      * ```
      */
+    // eslint-disable-next-line @typescript-eslint/ban-types
     toJSON(): object;
 
     /**
@@ -1190,6 +1206,16 @@ export namespace FirebaseAuthTypes {
    */
   export class Module extends FirebaseModule {
     /**
+     * Returns the current tenant Id or null if it has never been set
+     *
+     * #### Example
+     *
+     * ```js
+     * const tenantId = firebase.auth().tenantId;
+     * ```
+     */
+    tenantId: string | null;
+    /**
      * Returns the current language code.
      *
      * #### Example
@@ -1216,6 +1242,19 @@ export namespace FirebaseAuthTypes {
      * > It is recommended to use {@link auth#onAuthStateChanged} to track whether the user is currently signed in.
      */
     currentUser: User | null;
+    /**
+     * Sets the tenant id.
+     *
+     * #### Example
+     *
+     * ```js
+     * await firebase.auth().setTenantId('tenant-123');
+     * ```
+     *
+     * @error auth/invalid-tenant-id if the tenant id is invalid for some reason
+     * @param tenantId the tenantID current app bind to.
+     */
+    setTenantId(tenantId: string): Promise<void>;
     /**
      * Sets the language code.
      *
@@ -1626,34 +1665,45 @@ export namespace FirebaseAuthTypes {
      *
      * @platform ios
      *
+     * @error auth/keychain-error Thrown if you attempt to access an inaccessible keychain
      * @param userAccessGroup A string of the keychain id i.e. "TEAMID.com.example.group1"
      */
     useUserAccessGroup(userAccessGroup: string): Promise<null>;
+    /**
+     * Modify this Auth instance to communicate with the Firebase Auth emulator.
+     * This must be called synchronously immediately following the first call to firebase.auth().
+     * Do not use with production credentials as emulator traffic is not encrypted.
+     *
+     * Note: on android, hosts 'localhost' and '127.0.0.1' are automatically remapped to '10.0.2.2' (the
+     * "host" computer IP address for android emulators) to make the standard development experience easy.
+     * If you want to use the emulator on a real android device, you will need to specify the actual host
+     * computer IP address.
+     *
+     * @param url: emulator URL, must have host and port (eg, 'http://localhost:9099')
+     */
+    useEmulator(url: string): void;
   }
 }
 
 type CallbackOrObserver<T extends (...args: any[]) => any> = T | { next: T };
 
-declare module '@react-native-firebase/auth' {
-  // tslint:disable-next-line:no-duplicate-imports required otherwise doesn't work
-  import { ReactNativeFirebase } from '@react-native-firebase/app';
-  import ReactNativeFirebaseModule = ReactNativeFirebase.Module;
-  import FirebaseModuleWithStaticsAndApp = ReactNativeFirebase.FirebaseModuleWithStaticsAndApp;
+declare const defaultExport: ReactNativeFirebase.FirebaseModuleWithStaticsAndApp<
+  FirebaseAuthTypes.Module,
+  FirebaseAuthTypes.Statics
+>;
 
-  const firebaseNamedExport: {} & ReactNativeFirebaseModule;
-  export const firebase = firebaseNamedExport;
+export const firebase: ReactNativeFirebase.Module & {
+  auth: typeof defaultExport;
+  app(name?: string): ReactNativeFirebase.FirebaseApp & { auth(): FirebaseAuthTypes.Module };
+};
 
-  const defaultExport: FirebaseModuleWithStaticsAndApp<
-    FirebaseAuthTypes.Module,
-    FirebaseAuthTypes.Statics
-  >;
-  export default defaultExport;
-}
+export default defaultExport;
 
 /**
  * Attach namespace to `firebase.` and `FirebaseApp.`.
  */
 declare module '@react-native-firebase/app' {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   namespace ReactNativeFirebase {
     import FirebaseModuleWithStaticsAndApp = ReactNativeFirebase.FirebaseModuleWithStaticsAndApp;
     interface Module {
