@@ -67,8 +67,7 @@ describe('database().ref().push()', function () {
     ref.push(value, () => {
       callback();
     });
-    await Utils.sleep(1000);
-    callback.should.be.calledOnce();
+    await Utils.spyToBeCalledOnceAsync(callback);
   });
 
   it('throws if push errors', async function () {
@@ -86,7 +85,7 @@ describe('database().ref().push()', function () {
       error.message.should.containEql("doesn't have permission to access");
       callback();
     });
-    await Utils.sleep(1000);
+    await Utils.spyToBeCalledOnceAsync(callback);
     callback.should.be.calledOnce();
   });
 });

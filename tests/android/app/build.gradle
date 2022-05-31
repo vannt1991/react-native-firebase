@@ -1,16 +1,18 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
-apply plugin: "com.google.firebase.firebase-perf"
+apply plugin: 'com.google.firebase.firebase-perf'
+apply plugin: 'com.google.firebase.appdistribution'
 
 import com.android.build.OutputFile
+import groovy.json.JsonSlurper
 
 project.ext.react = [
     enableHermes: false,
 ]
 
 // up to mono root
-apply from: "../../node_modules/react-native/react.gradle"
+apply from: '../../node_modules/react-native/react.gradle'
 
 /**
  * The preferred build flavor of JavaScriptCore.
@@ -36,55 +38,70 @@ def enableSeparateBuildPerCPUArchitecture = false
  */
 def useIntlJsc = false
 
+/**
+ * Architectures to build native code for in debug.
+ */
+def nativeArchitectures = project.getProperties().get('reactNativeDebugArchitectures')
+
 android {
   ndkVersion rootProject.ext.ndkVersion
   compileSdkVersion rootProject.ext.compileSdkVersion
   aaptOptions {
     // https://firebase.google.com/docs/ml/android/use-custom-models#local_model
-    noCompress "tflite"
+    noCompress 'tflite'
   }
   defaultConfig {
-    applicationId "com.invertase.testing"
+    applicationId 'com.invertase.testing'
     minSdkVersion rootProject.ext.minSdkVersion
     targetSdkVersion rootProject.ext.targetSdkVersion
-    versionCode 1
-    versionName "1.0"
+    versionCode 200
+    versionName '1.0'
 
-    // detox
+    // detox items
     testBuildType System.getProperty('testBuildType', 'debug')
-    // detox
     testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+    missingDimensionStrategy 'detox', 'full'
   }
   splits {
     abi {
       reset()
       enable enableSeparateBuildPerCPUArchitecture
       universalApk false  // If true, also generate a universal APK
-      include "armeabi-v7a", "x86", "arm64-v8a", "x86_64"
+      include 'armeabi-v7a', 'x86', 'arm64-v8a', 'x86_64'
     }
   }
 
   signingConfigs {
     release {
-      storeFile file("keystore.jks")
-      storePassword "12345678"
-      keyAlias "key0"
-      keyPassword "12345678"
+      storeFile file('keystore.jks')
+      storePassword '12345678'
+      keyAlias 'key0'
+      keyPassword '12345678'
     }
   }
 
   buildTypes {
+    debug {
+      debuggable true
+      testCoverageEnabled true
+      signingConfig signingConfigs.release // sign with shared SHA256; configured in firebase dynamic-links
+    }
     release {
       minifyEnabled true
-      proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
       proguardFile "${rootProject.projectDir}/../node_modules/detox/android/detox/proguard-rules-app.pro"
       signingConfig signingConfigs.release
+      firebaseCrashlytics {
+        nativeSymbolUploadEnabled true
+          unstrippedNativeLibsDir 'build/intermediates/merged_native_libs/release/out/lib'
+      }
     }
   }
 
-  compileOptions {
-    sourceCompatibility 1.8
-    targetCompatibility 1.8
+  testOptions {
+    unitTests {
+      includeAndroidResources = true
+    }
   }
 
   // applicationVariants are e.g. debug, release
@@ -92,7 +109,7 @@ android {
     variant.outputs.each { output ->
       // For each separate APK per architecture, set a unique version code as described here:
       // https://developer.android.com/studio/build/configure-apk-splits.html
-      def versionCodes = ["armeabi-v7a": 1, "x86": 2, "arm64-v8a": 3, "x86_64": 4]
+      def versionCodes = ['armeabi-v7a': 1, 'x86': 2, 'arm64-v8a': 3, 'x86_64': 4]
       def abi = output.getFilter(OutputFile.ABI)
       if (abi != null) {  // null for the universal-debug, universal-release variants
         output.versionCodeOverride =
@@ -101,6 +118,8 @@ android {
     }
   }
 }
+
+apply from: './jacoco.gradle'
 
 dependencies {
   implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -123,15 +142,11 @@ dependencies {
   /* ------------------------
    *  TESTING SDKS/LIBRARIES
    * ------------------------ */
-    androidTestImplementation(project(path: ":detox"))
+    androidTestImplementation(project(path: ':detox'))
+
+    def firebaseBomVersion = new JsonSlurper().parseText(new File('../../node_modules/@react-native-firebase/app/package.json').text).sdkVersions.android.firebase
+    androidTestImplementation platform("com.google.firebase:firebase-bom:${firebaseBomVersion}")
+    androidTestImplementation "com.google.firebase:firebase-appcheck-debug-testing"
 }
 
-// Run this once to be able to run the application with BUCK
-// puts all compile dependencies into folder libs for BUCK to use
-task copyDownloadableDepsToLibs(type: Copy) {
-  from configurations.compile
-  into 'libs'
-}
-
-
-apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+apply from: file('../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle'); applyNativeModulesAppBuildGradle(project)

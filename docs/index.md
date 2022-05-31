@@ -11,7 +11,7 @@ React Native Firebase is the officially recommended collection of packages that 
 Before getting started, the documentation assumes you are able to create a project with React Native and that you have an active Firebase project.
 If you do not meet these prerequisites, follow the links below:
 
-- [Getting started with React Native](https://facebook.github.io/react-native/docs/getting-started.html)
+- [React Native - Setting up the development environment](https://reactnative.dev/docs/environment-setup)
 - [Create a new Firebase project](https://console.firebase.google.com/)
 
 ## Installation
@@ -45,8 +45,9 @@ local projects package name which can be found inside of the `manifest` tag with
 file within your project.
 
 > The debug signing certificate is optional to use Firebase with your app, but is required for Dynamic Links, Invites and Phone Authentication.
-> To generate a certificate run `cd android && ./gradlew signingReport` and copy the SHA1 from the `debug` key. This generates two variant keys.
-> You can copy the 'SHA1' that belongs to the `debugAndroidTest` variant key option.
+> To generate a certificate run `cd android && ./gradlew signingReport`. This generates two variant keys.
+> You have to copy both 'SHA1' and 'SHA-256' keys that belong to the 'debugAndroidTest' variant key option.
+> Then, you can add those keys to the 'SHA certificate fingerprints' on your app in Firebase console.
 
 Download the `google-services.json` file and place it inside of your project at the following location: `/android/app/google-services.json`.
 
@@ -61,7 +62,7 @@ First, add the `google-services` plugin as a dependency inside of your `/android
 buildscript {
   dependencies {
     // ... other dependencies
-    classpath 'com.google.gms:google-services:4.3.4'
+    classpath 'com.google.gms:google-services:4.3.10'
     // Add me --- /\
   }
 }
@@ -112,9 +113,7 @@ Within your existing `didFinishLaunchingWithOptions` method, add the following t
 ```
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   // Add me --- \/
-  if ([FIRApp defaultApp] == nil) {
-    [FIRApp configure];
-  }
+  [FIRApp configure];
   // Add me --- /\
   // ...
 }
@@ -184,16 +183,16 @@ project.ext {
     versions: [
       // Overriding Build/Android SDK Versions
       android : [
-        minSdk    : 16,
-        targetSdk : 30,
-        compileSdk: 30,
-        buildTools: "30.0.2"
+        minSdk    : 19,
+        targetSdk : 31,
+        compileSdk: 31,
+        buildTools: "31.0.0"
       ],
 
       // Overriding Library SDK Versions
       firebase: [
         // Override Firebase SDK Version
-        bom           : "26.6.0"
+        bom           : "30.1.0"
       ],
     ],
   ])
@@ -208,7 +207,7 @@ Open your projects `/ios/Podfile` and add any of the globals shown below to the 
 
 ```ruby
 # Override Firebase SDK Version
-$FirebaseSDKVersion = '7.7.0'
+$FirebaseSDKVersion = '8.15.0'
 ```
 
 Once changed, reinstall your projects pods via pod install and rebuild your project with `npx react-native run-ios`.
@@ -236,15 +235,15 @@ To increase throughput, you can tune the thread pool executor via `firebase.json
 {
   "react-native": {
     "android_task_executor_maximum_pool_size": 10,
-    "android_task_executor_keep_alive_seconds": 3,
+    "android_task_executor_keep_alive_seconds": 3
   }
 }
 ```
 
-| Key          | Description                                     |
-| ------------ | ----------------------------------------------- |
-| `android_task_executor_maximum_pool_size` | Maximum pool size of ThreadPoolExecutor. Defaults to `1`. Larger values typically improve performance when executing large numbers of asynchronous tasks, e.g. Firestore queries. Setting this value to `0` completely disables the pooled executor and all tasks execute in serial per module. |
-| `android_task_executor_keep_alive_seconds` | Keep-alive time of ThreadPoolExecutor, in seconds. Defaults to `3`. Excess threads in the pool executor will be terminated if they have been idle for more than the keep-alive time. This value doesn't have any effect when the maximum pool size is lower than `2`. |
+| Key                                        | Description                                                                                                                                                                                                                                                                                     |
+| ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `android_task_executor_maximum_pool_size`  | Maximum pool size of ThreadPoolExecutor. Defaults to `1`. Larger values typically improve performance when executing large numbers of asynchronous tasks, e.g. Firestore queries. Setting this value to `0` completely disables the pooled executor and all tasks execute in serial per module. |
+| `android_task_executor_keep_alive_seconds` | Keep-alive time of ThreadPoolExecutor, in seconds. Defaults to `3`. Excess threads in the pool executor will be terminated if they have been idle for more than the keep-alive time. This value doesn't have any effect when the maximum pool size is lower than `2`.                           |
 
 ### Allow iOS Static Frameworks
 
@@ -257,4 +256,44 @@ $RNFirebaseAsStaticFramework = true
 
 ### Expo
 
-Expo does not support integration with native modules via its ["Managed workflow"](https://docs.expo.io/versions/latest/introduction/managed-vs-bare/#managed-workflow). Integration is only possible when used with the ["Bare workflow"](https://docs.expo.io/versions/latest/introduction/managed-vs-bare/#bare-workflow).
+Integration with Expo is possible in both bare workflow and [custom managed workflow](https://docs.expo.io/workflow/customizing/) via [config plugins](https://docs.expo.io/guides/config-plugins/).
+
+React Native Firebase cannot be used in the "Expo Go" app, because [it requires custom native code](https://docs.expo.io/workflow/customizing/).
+
+#### Installation
+
+_If you're using [Bare Workflow](https://docs.expo.io/introduction/managed-vs-bare/#bare-workflow), please follow the above installation steps instead._
+
+The recommendation is to use a [custom development client](https://docs.expo.dev/clients/getting-started/). If starting a new app, you can run `npx create-react-native-app -t with-dev-client` to have this set up automatically. It will also allow you to use the Expo Application Service to test the android and iOS builds.
+
+After installing the `@react-native-firebase/app` NPM package, add the [config plugin](https://docs.expo.io/guides/config-plugins/) to the [`plugins`](https://docs.expo.io/versions/latest/config/app/#plugins) array of your `app.json` or `app.config.js`.
+
+Also, you have to provide paths to the `google-services.json` and `GoogleService-Info.plist` files by specifying the [`expo.android.googleServicesFile`](https://docs.expo.io/versions/latest/config/app/#googleservicesfile-1) and [`expo.ios.googleServicesFile`](https://docs.expo.io/versions/latest/config/app/#googleservicesfile) fields respectively.
+
+The `app.json` for integration that included the optional crashlytics and performance as well as the mandatory app plugin would look like this, customize based on which optional modules you use:
+
+```json
+{
+  "expo": {
+    "android": {
+      "googleServicesFile": "./google-services.json"
+    },
+    "ios": {
+      "googleServicesFile": "./GoogleService-Info.plist"
+    },
+    "plugins": [
+      "@react-native-firebase/app",
+      "@react-native-firebase/perf",
+      "@react-native-firebase/crashlytics"
+    ]
+  }
+}
+```
+
+Next, you need to use the `expo prebuild --clean` command as described in the ["Adding custom native code"](https://docs.expo.io/workflow/customizing/) guide to rebuild your app with the plugin changes. If this command isn't run, you'll encounter connection errors to Firebase.
+
+Config plugins are only required for React Native Firebase modules, which require custom native installation steps - e.g. modifying the Xcode project, `Podfile`, `build.gradle`, `AndroidManifest.xml` etc. Packages without native steps required will work out of the box.
+
+> Not all React Native Firebase packages have Expo config plugins provided yet. You may see if a module is supported by checking if it contains the `app.plugin.js` file in its package directory.
+>
+> If you're using the [Expo Tools](https://marketplace.visualstudio.com/items?itemName=byCedric.vscode-expo) VSCode extension, the IntelliSense will display a list of available plugins, when editing the `plugins` section of `app.json`.

@@ -2,7 +2,7 @@
 title: Cloud Messaging
 description: Installation and getting started with Cloud Messaging.
 icon: //static.invertase.io/assets/firebase/cloud-messaging.svg
-next: /messaging/ios-permissions
+next: /messaging/usage/ios-setup
 previous: /functions/writing-deploying-functions
 ---
 
@@ -72,7 +72,7 @@ On Android, you do not need to request user permission. This method can still be
 
 ## Receiving messages
 
-FCM messages can be sent to *real* Android/iOS devices and Android emulators (iOS simulators however do *not* handle cloud messages) via a number of methods (see below).
+FCM messages can be sent to _real_ Android/iOS devices and Android emulators (iOS simulators however do _not_ handle cloud messages) via a number of methods (see below).
 A message is simply a payload of data which can be used however you see fit within your application.
 
 Common use-cases for handling messages could be:
@@ -110,6 +110,10 @@ The device state and message contents determines which handler will be called:
 - In cases where the message is data-only and the device is in the background or quit, both Android & iOS treat the message
   as low priority and will ignore it (i.e. no event will be sent). You can however increase the priority by setting the `priority` to `high` (Android) and
   `content-available` to `true` (iOS) properties on the payload.
+
+- On iOS in cases where the message is data-only and the device is in the background or quit, the message will be delayed
+  until the background message handler is registered via setBackgroundMessageHandler, signaling the application's javascript
+  is loaded and ready to run.
 
 To learn more about how to send these options in your message payload, view the Firebase documentation for your [FCM API implementation](https://firebase.google.com/docs/cloud-messaging/concept-options).
 
@@ -216,25 +220,25 @@ For iOS specific "data-only" messages, the message must include the appropriate 
 
 ```js
 admin.messaging().send({
-    data: {
-      //some data
-    },
-    apns: {
-      payload: {
-        aps: {
-          contentAvailable: true
-        }
+  data: {
+    //some data
+  },
+  apns: {
+    payload: {
+      aps: {
+        contentAvailable: true,
       },
-      headers: {
-        'apns-push-type': 'background',
-        'apns-priority': '5',
-        'apns-topic': '' // your app bundle identifier
-      }
     },
-    //must include token, topic, or condition
-    //token: //device token
-    //topic: //notification topic
-    //condition: //notification condition
+    headers: {
+      'apns-push-type': 'background',
+      'apns-priority': '5',
+      'apns-topic': '', // your app bundle identifier
+    },
+  },
+  //must include token, topic, or condition
+  //token: //device token
+  //topic: //notification topic
+  //condition: //notification condition
 });
 ```
 
@@ -250,7 +254,7 @@ Although the library supports handling messages in background/quit states, the u
 On Android, a [Headless JS](https://reactnative.dev/docs/headless-js-android) task (an Android only feature) is created that runs separately to your main React component; allowing your background handler code to run without mounting your root component.
 
 On iOS however, when a message is received the device silently starts your application in a background state. At this point, your background handler (via `setBackgroundMessageHandler`) is triggered, but your root React component also gets mounted. This can be problematic for some users since any side-effects will be called inside of your app (e.g. `useEffects`, analytics events/triggers etc). To get around this problem,
-you can configure your `AppDelegate.m` file (see instructions below) to inject a `isHeadless` prop into your root component.  Use this property to conditionally render `null` ("nothing") if your app is launched in the background:
+you can configure your `AppDelegate.m` file (see instructions below) to inject a `isHeadless` prop into your root component. Use this property to conditionally render `null` ("nothing") if your app is launched in the background:
 
 ```jsx
 // index.js
@@ -298,12 +302,12 @@ RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
 - For projects that use react-native-navigation (or if you just don't want to mess with your launchProperties) you can use the `getIsHeadless` method (iOS only) from messaging like so:
 
 ```jsx
-messaging().getIsHeadless().then(isHeadless => {
-  // do sth with isHeadless
-});
-
+messaging()
+  .getIsHeadless()
+  .then(isHeadless => {
+    // do sth with isHeadless
+  });
 ```
-
 
 On Android, the `isHeadless` prop will not exist.
 
@@ -434,7 +438,7 @@ On Android, any messages which display a [Notification](/messaging/notifications
 (such as the small icon, title etc). To provide a custom tint color, update the `messaging_android_notification_color` property
 with a Android color resource name.
 
-The library provides a set of [predefined colors](https://github.com/invertase/react-native-firebase/blob/master/packages/messaging/android/src/main/res/values/colors.xml) corresponding to the [HTML colors](https://www.w3schools.com/colors/colors_names.asp) for convenience, for example:
+The library provides a set of [predefined colors](https://github.com/invertase/react-native-firebase/blob/main/packages/messaging/android/src/main/res/values/colors.xml) corresponding to the [HTML colors](https://www.w3schools.com/colors/colors_names.asp) for convenience, for example:
 
 ```json
 // <projectRoot>/firebase.json

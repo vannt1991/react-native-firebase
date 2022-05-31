@@ -21,6 +21,7 @@
       android:name=".MainActivity"
       android:label="@string/app_name"
       android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
+      android:exported="true"
       android:launchMode="singleTask"
       android:windowSoftInputMode="adjustResize">
       <intent-filter>
@@ -28,13 +29,13 @@
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
       <!-- Dynamic DynamicLinks Test -->
-      <intent-filter>
+      <intent-filter android:autoVerify="true">
         <action android:name="android.intent.action.VIEW" />
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
 
         <data
-          android:host="invertase.io"
+          android:host="reactnativefirebase.page.link"
           android:scheme="https" />
       </intent-filter>
     </activity>

@@ -421,6 +421,13 @@ export namespace FirebaseDynamicLinksTypes {
      * On iOS this returns a string value representing the minimum app version (not the iOS system version).
      */
     minimumAppVersion: number | string | null;
+
+    /**
+     * The potential UTM parameters linked to this dynamic link
+     *
+     * It will only work for short links, not long links
+     */
+    utmParameters: Record<string, string>;
   }
 
   /**
@@ -541,6 +548,15 @@ export namespace FirebaseDynamicLinksTypes {
      * @param listener The listener callback, called with Dynamic Link instances.
      */
     onLink(listener: (link: DynamicLink) => void): () => void;
+
+    /**
+     * Perform built-in diagnostics on iOS. This is best performed on a real device running
+     * a build from Xcode so you may see the output easily. Alternatively it should be visible
+     * in Console.app with an iPhone plugged into a macOS computer
+     *
+     * NOTE: iOS only
+     */
+    performDiagnostics(): void;
 
     /**
      * Resolve a given dynamic link (short or long) directly.

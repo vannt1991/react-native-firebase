@@ -12,17 +12,9 @@
 - - Feature Requests
   - 'https://invertase.canny.io/react-native-firebase'
 - - Contributing
-  - 'https://github.com/invertase/react-native-firebase/blob/master/CONTRIBUTING.md'
+  - 'https://github.com/invertase/react-native-firebase/blob/main/CONTRIBUTING.md'
 - - Legacy Docs (<= v5)
   - 'https://v5.rnfirebase.io/docs/v5.x.x/getting-started'
-- - AdMob
-  - - - Usage
-      - '/admob/usage'
-    - - Displaying Adverts
-      - '/admob/displaying-ads'
-    - - European User Consent
-      - '/admob/european-user-consent'
-  - '//static.invertase.io/assets/firebase/google-admob.svg'
 - - Analytics
   - - - Usage
       - '/analytics/usage'
@@ -31,6 +23,14 @@
     - - Building an Analytics Funnel
       - 'https://blog.theodo.com/2018/01/building-google-analytics-funnel-firebase-react-native'
   - '//static.invertase.io/assets/firebase/analytics.svg'
+- - App Check
+  - - - Usage
+      - '/app-check/usage'
+  - '//static.invertase.io/assets/social/firebase-logo.png'
+- - App Distribution
+  - - - Usage
+      - '/app-distribution/usage'
+  - '/assets/docs/app-distribution/app-distribution.png'
 - - Authentication
   - - - Usage
       - '/auth/usage'
@@ -46,6 +46,8 @@
       - '/firestore/emulator'
     - - Usage with FlatLists
       - '/firestore/usage-with-flatlists'
+    - - Implementing Pagination
+      - '/firestore/pagination'
     - - Building a "TODO" app
       - 'https://invertase.io/blog/getting-started-with-cloud-firestore-on-react-native'
   - '//static.invertase.io/assets/firebase/cloud-firestore.svg'
@@ -58,6 +60,8 @@
 - - Cloud Messaging
   - - - Usage
       - '/messaging/usage'
+    - - iOS Project Setup
+      - '/messaging/usage/ios-setup'
     - - iOS Permissions
       - '/messaging/ios-permissions'
     - - Notifications
@@ -97,23 +101,17 @@
   - - - Usage
       - '/dynamic-links/usage'
   - '//static.invertase.io/assets/firebase/dynamic-links.svg'
-- - Instance ID
-  - - - Usage
-      - '/iid/usage'
-  - '//static.invertase.io/assets/social/firebase-logo.png'
 - - In-App Messaging
   - - - Usage
       - '/in-app-messaging/usage'
   - '//static.invertase.io/assets/firebase/in-app-messaging.svg'
+- - Installations
+  - - - Usage
+      - '/installations/usage'
+  - '//static.invertase.io/assets/social/firebase-logo.png'
 - - ML
   - - - Usage
       - '/ml/usage'
-    - - Text Recognition
-      - '/ml/text-recognition'
-    - - Landmark Recognition
-      - '/ml/landmark-recognition'
-    - - Image Labeling
-      - '/ml/image-labeling'
   - '//static.invertase.io/assets/firebase/ml-kit.svg'
 - - Remote Config
   - - - Usage
@@ -124,4 +122,6 @@
       - '/perf/usage'
     - - Axios Integration
       - '/perf/axios-integration'
+    - - KY Integration
+      - '/perf/ky-integration'
   - '//static.invertase.io/assets/firebase/performance-monitoring.svg'

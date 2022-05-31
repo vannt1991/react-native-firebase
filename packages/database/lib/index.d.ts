@@ -1217,7 +1217,7 @@ export namespace FirebaseDatabaseTypes {
      *
      * @param enabled Whether persistence is enabled for the Database service.
      */
-    setPersistenceEnabled(enabled: boolean): Promise<void>;
+    setPersistenceEnabled(enabled: boolean): void;
 
     /**
      * Sets the native logging level for the database module. By default,
@@ -1237,7 +1237,7 @@ export namespace FirebaseDatabaseTypes {
      *
      * @param enabled Whether debug logging is enabled.
      */
-    setLoggingEnabled(enabled: boolean): Promise<void>;
+    setLoggingEnabled(enabled: boolean): void;
 
     /**
      * By default Firebase Database will use up to 10MB of disk space to cache data. If the cache grows beyond this size,
@@ -1262,7 +1262,22 @@ export namespace FirebaseDatabaseTypes {
      *
      * @param bytes The new size of the cache in bytes.
      */
-    setPersistenceCacheSizeBytes(bytes: number): Promise<void>;
+    setPersistenceCacheSizeBytes(bytes: number): void;
+
+    /**
+     * Modify this Database instance to communicate with the Firebase Database emulator.
+     * This must be called synchronously immediately following the first call to firebase.database().
+     * Do not use with production credentials as emulator traffic is not encrypted.
+     *
+     * Note: on android, hosts 'localhost' and '127.0.0.1' are automatically remapped to '10.0.2.2' (the
+     * "host" computer IP address for android emulators) to make the standard development experience easy.
+     * If you want to use the emulator on a real android device, you will need to specify the actual host
+     * computer IP address.
+     *
+     * @param host: emulator host (eg, 'localhost')
+     * @param port: emulator port (eg, 9000)
+     */
+    useEmulator(host: string, port: number): void;
   }
 }
 

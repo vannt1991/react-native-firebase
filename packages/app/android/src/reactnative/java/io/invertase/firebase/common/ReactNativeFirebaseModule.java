@@ -19,24 +19,21 @@ package io.invertase.firebase.common;
 
 import android.app.Activity;
 import android.content.Context;
+import androidx.annotation.CallSuper;
+import androidx.annotation.NonNull;
 import com.facebook.react.bridge.*;
 import io.invertase.firebase.interfaces.ContextProvider;
-import io.invertase.firebase.common.TaskExecutorService;
-
-import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
-public class ReactNativeFirebaseModule extends ReactContextBaseJavaModule implements ContextProvider {
+public class ReactNativeFirebaseModule extends ReactContextBaseJavaModule
+    implements ContextProvider {
   private final TaskExecutorService executorService;
 
   private String moduleName;
 
-  public ReactNativeFirebaseModule(
-    ReactApplicationContext reactContext,
-    String moduleName
-  ) {
+  public ReactNativeFirebaseModule(ReactApplicationContext reactContext, String moduleName) {
     super(reactContext);
     this.moduleName = moduleName;
     this.executorService = new TaskExecutorService(getName());
@@ -54,11 +51,7 @@ public class ReactNativeFirebaseModule extends ReactContextBaseJavaModule implem
   }
 
   public static void rejectPromiseWithCodeAndMessage(
-    Promise promise,
-    String code,
-    String message,
-    String nativeErrorMessage
-  ) {
+      Promise promise, String code, String message, String nativeErrorMessage) {
     WritableMap userInfoMap = Arguments.createMap();
     userInfoMap.putString("code", code);
     userInfoMap.putString("message", message);
@@ -67,6 +60,7 @@ public class ReactNativeFirebaseModule extends ReactContextBaseJavaModule implem
   }
 
   @Override
+  @CallSuper
   public void initialize() {
     super.initialize();
   }
@@ -75,24 +69,25 @@ public class ReactNativeFirebaseModule extends ReactContextBaseJavaModule implem
     return getReactApplicationContext();
   }
 
-  public ExecutorService getExecutor() {
+  public final ExecutorService getExecutor() {
     return executorService.getExecutor();
   }
 
-  public ExecutorService getTransactionalExecutor() {
+  public final ExecutorService getTransactionalExecutor() {
     return executorService.getTransactionalExecutor();
   }
 
-  public ExecutorService getTransactionalExecutor(String identifier) {
+  public final ExecutorService getTransactionalExecutor(String identifier) {
     return executorService.getTransactionalExecutor(identifier);
   }
 
   @Override
+  @CallSuper
   public void onCatalystInstanceDestroy() {
     executorService.shutdown();
   }
 
-  public void removeEventListeningExecutor(String identifier) {
+  public final void removeEventListeningExecutor(String identifier) {
     String executorName = executorService.getExecutorName(true, identifier);
     executorService.removeExecutor(executorName);
   }
@@ -105,12 +100,13 @@ public class ReactNativeFirebaseModule extends ReactContextBaseJavaModule implem
     return getCurrentActivity();
   }
 
-  @Nonnull
+  @NonNull
   @Override
   public String getName() {
     return "RNFB" + moduleName + "Module";
   }
 
+  @NonNull
   @Override
   public Map<String, Object> getConstants() {
     return new HashMap<>();

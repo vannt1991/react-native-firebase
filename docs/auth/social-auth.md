@@ -22,11 +22,11 @@ Once authentication is successful, a Firebase credential can be used to sign the
 
 To get started, you must first install the [`react-native-apple-authentication`](https://github.com/invertase/react-native-apple-authentication)
 library. There are a number of [prerequisites](https://github.com/invertase/react-native-apple-authentication#prerequisites-to-using-this-library) to using the library, including
-[setting up your Apple Developer account](https://github.com/invertase/react-native-apple-authentication/blob/master/docs/INITIAL_SETUP.md) to enable Apple Sign-In.
+[setting up your Apple Developer account](https://github.com/invertase/react-native-apple-authentication/blob/main/docs/INITIAL_SETUP.md) to enable Apple Sign-In.
 
 Ensure the "Apple" sign-in provider is enabled on the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers).
 
-Once setup, we can trigger an initial request to allow user to sign in with their Apple account, using a pre-rendered
+Once setup, we can trigger an initial request to allow the user to sign in with their Apple account, using a pre-rendered
 button the `react-native-apple-authentication` library provides:
 
 ```jsx
@@ -64,7 +64,7 @@ async function onAppleButtonPress() {
 
   // Ensure Apple returned a user identityToken
   if (!appleAuthRequestResponse.identityToken) {
-    throw 'Apple Sign-In failed - no identify token returned';
+    throw new Error('Apple Sign-In failed - no identify token returned');
   }
 
   // Create a Firebase credential from the response
@@ -81,11 +81,11 @@ with the new authentication state of the user.
 
 ## Facebook
 
-Facebook provide an [official React Native library](https://github.com/facebook/react-native-fbsdk) which wraps around
+There is a [community-supported React Native library](https://github.com/thebergamo/react-native-fbsdk-next) which wraps around
 the native Facebook SDKs to enable Facebook sign-in.
 
 Before getting started, ensure you have installed the library, [configured your Android & iOS applications](https://developers.facebook.com/docs/android/getting-started/) and
-setup your [Facebook Developer Account](https://github.com/facebook/react-native-fbsdk#3-configure-projects)
+setup your [Facebook Developer Account](https://github.com/thebergamo/react-native-fbsdk-next#3-configure-projects)
 to enable Facebook Login.
 
 Ensure the "Facebook" sign-in provider is enabled on the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers).
@@ -111,7 +111,7 @@ The `onFacebookButtonPress` can then be implemented as follows:
 
 ```js
 import auth from '@react-native-firebase/auth';
-import { LoginManager, AccessToken } from 'react-native-fbsdk';
+import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 
 async function onFacebookButtonPress() {
   // Attempt login with permissions
@@ -136,15 +136,56 @@ async function onFacebookButtonPress() {
 }
 ```
 
+### Facebook Limited Login (iOS only)
+
+To use Facebook Limited Login instead of "classic" Facebook Login, the `onFacebookButtonPress` can then be implemented as follows:
+
+```js
+import auth from '@react-native-firebase/auth';
+import { LoginManager, AuthenticationToken } from 'react-native-fbsdk-next';
+import { sha256 } from 'react-native-sha256';
+
+async function onFacebookButtonPress() {
+  // Create a nonce and the corresponding
+  // sha256 hash of the nonce
+  const nonce = '123456';
+  const nonceSha256 = await sha256(nonce);
+  // Attempt login with permissions and limited login
+  const result = await LoginManager.logInWithPermissions(
+    ['public_profile', 'email'],
+    'limited',
+    nonceSha256,
+  );
+
+  if (result.isCancelled) {
+    throw 'User cancelled the login process';
+  }
+
+  // Once signed in, get the users AuthenticationToken
+  const data = await AuthenticationToken.getAuthenticationTokenIOS();
+
+  if (!data) {
+    throw 'Something went wrong obtaining authentication token';
+  }
+
+  // Create a Firebase credential with the AuthenticationToken
+  // and the nonce (Firebase will validates the hash against the nonce)
+  const facebookCredential = auth.FacebookAuthProvider.credential(data.authenticationToken, nonce);
+
+  // Sign-in the user with the credential
+  return auth().signInWithCredential(facebookCredential);
+}
+```
+
 Upon successful sign-in, any [`onAuthStateChanged`](/auth/usage#listening-to-authentication-state) listeners will trigger
 with the new authentication state of the user.
 
 ## Twitter
 
-Using the external [`react-native-twitter-signin`](https://github.com/GoldenOwlAsia/react-native-twitter-signin) library,
+Using the external [`@react-native-twitter-signin/twitter-signin`](https://github.com/react-native-twitter-signin/twitter-signin) library,
 we can sign-in the user with Twitter and generate a credential which can be used to sign-in with Firebase.
 
-To get started, install the library and ensure you have completed setup, following the required [prerequisites](https://github.com/GoldenOwlAsia/react-native-twitter-signin#prerequisites) list.
+To get started, install the library and ensure you have completed setup, following the required [prerequisites](https://github.com/react-native-twitter-signin/twitter-signin#prerequisites) list.
 
 Ensure the "Twitter" sign-in provider is enabled on the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers).
 
@@ -211,7 +252,7 @@ Ensure the "Google" sign-in provider is enabled on the [Firebase Console](https:
 Follow [these](https://github.com/react-native-google-signin/google-signin#project-setup-and-initialization) instructions to install and setup `google-signin`
 
 Before triggering a sign-in request, you must initialize the Google SDK using your any required scopes and the
-`webClientId`, which can be found in the `android/app/google-services.json` file as the `client/oauth_client/client_id` property (the id ends with `.apps.googleusercontent.com`). Make sure to pick the `client_id` with `client_type: 3` 
+`webClientId`, which can be found in the `android/app/google-services.json` file as the `client/oauth_client/client_id` property (the id ends with `.apps.googleusercontent.com`). Make sure to pick the `client_id` with `client_type: 3`
 
 ```js
 import { GoogleSignin } from '@react-native-google-signin/google-signin';

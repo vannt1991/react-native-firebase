@@ -16,8 +16,8 @@
  *
  */
 
-#import <React/RCTBridgeModule.h>
 #import <Firebase/Firebase.h>
+#import <React/RCTBridgeModule.h>
 
 @interface RNFBFirestoreCommon : NSObject
 
@@ -29,7 +29,9 @@
 
 + (FIRDocumentReference *)getDocumentForFirestore:(FIRFirestore *)firestore path:(NSString *)path;
 
-+ (FIRQuery *)getQueryForFirestore:(FIRFirestore *)firestore path:(NSString *)path type:(NSString *)type;
++ (FIRQuery *)getQueryForFirestore:(FIRFirestore *)firestore
+                              path:(NSString *)path
+                              type:(NSString *)type;
 
 + (void)promiseRejectFirestoreException:(RCTPromiseRejectBlock)reject error:(NSError *)error;
 
@@ -41,4 +43,5 @@ extern NSString *const FIRESTORE_CACHE_SIZE;
 extern NSString *const FIRESTORE_HOST;
 extern NSString *const FIRESTORE_PERSISTENCE;
 extern NSString *const FIRESTORE_SSL;
-extern NSMutableDictionary * instanceCache;
+extern NSString *const FIRESTORE_SERVER_TIMESTAMP_BEHAVIOR;
+extern NSMutableDictionary *instanceCache;

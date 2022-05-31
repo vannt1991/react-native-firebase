@@ -25,6 +25,12 @@ describe('messaging()', function () {
   });
 
   describe('setAutoInitEnabled()', function () {
+    // These depend on `tests/firebase.json` having `messaging_auto_init_enabled` set to false the first time
+    // The setting is persisted across restarts, reset to false after for local runs where prefs are sticky
+    afterEach(async function () {
+      await firebase.messaging().setAutoInitEnabled(false);
+    });
+
     it('throws if enabled is not a boolean', function () {
       try {
         firebase.messaging().setAutoInitEnabled(123);
@@ -36,36 +42,62 @@ describe('messaging()', function () {
     });
 
     it('sets the value', async function () {
-      should.equal(firebase.messaging().isAutoInitEnabled, true);
-      await firebase.messaging().setAutoInitEnabled(false);
       should.equal(firebase.messaging().isAutoInitEnabled, false);
-
-      // Set it back to the default value for future runs in re-use mode
       await firebase.messaging().setAutoInitEnabled(true);
       should.equal(firebase.messaging().isAutoInitEnabled, true);
+
+      // Set it back to the default value for future runs in re-use mode
+      await firebase.messaging().setAutoInitEnabled(false);
+      should.equal(firebase.messaging().isAutoInitEnabled, false);
     });
   });
 
   describe('isDeviceRegisteredForRemoteMessages', function () {
-    android.it('returns true on android', () => {
-      should.equal(firebase.messaging().isDeviceRegisteredForRemoteMessages, true);
+    it('returns true on android', function () {
+      if (device.getPlatform() === 'android') {
+        should.equal(firebase.messaging().isDeviceRegisteredForRemoteMessages, true);
+      } else {
+        this.skip();
+      }
     });
-    it('defaults to false on ios before registering', function () {
+    it('defaults to false on ios before registering', async function () {
       if (device.getPlatform() === 'ios') {
         should.equal(firebase.messaging().isDeviceRegisteredForRemoteMessages, false);
+        await firebase.messaging().registerDeviceForRemoteMessages();
+        should.equal(firebase.messaging().isDeviceRegisteredForRemoteMessages, true);
+      } else {
+        this.skip();
       }
     });
   });
 
   describe('unregisterDeviceForRemoteMessages', function () {
-    android.it('resolves on android', async () => {
-      await firebase.messaging().unregisterDeviceForRemoteMessages();
+    it('resolves on android, remains registered', async function () {
+      if (device.getPlatform() === 'android') {
+        await firebase.messaging().unregisterDeviceForRemoteMessages();
+        should.equal(firebase.messaging().isDeviceRegisteredForRemoteMessages, true);
+      } else {
+        this.skip();
+      }
+    });
+    it('successfully unregisters on ios', async function () {
+      if (device.getPlatform() === 'ios') {
+        should.equal(firebase.messaging().isDeviceRegisteredForRemoteMessages, true);
+        await firebase.messaging().unregisterDeviceForRemoteMessages();
+        should.equal(firebase.messaging().isDeviceRegisteredForRemoteMessages, false);
+      } else {
+        this.skip();
+      }
     });
   });
 
   describe('hasPermission', function () {
-    android.it('returns true android (default)', async () => {
-      should.equal(await firebase.messaging().hasPermission(), true);
+    it('returns true android (default)', async function () {
+      if (device.getPlatform() === 'android') {
+        should.equal(await firebase.messaging().hasPermission(), true);
+      } else {
+        this.skip();
+      }
     });
     it('returns -1 on ios (default)', async function () {
       if (device.getPlatform() === 'ios') {
@@ -75,14 +107,22 @@ describe('messaging()', function () {
   });
 
   describe('requestPermission', function () {
-    android.it('resolves 1 on android', async () => {
-      should.equal(await firebase.messaging().requestPermission(), 1);
+    it('resolves 1 on android', async function () {
+      if (device.getPlatform() === 'android') {
+        should.equal(await firebase.messaging().requestPermission(), 1);
+      } else {
+        this.skip();
+      }
     });
   });
 
   describe('getAPNSToken', function () {
-    android.it('resolves null on android', async () => {
-      should.equal(await firebase.messaging().getAPNSToken(), null);
+    it('resolves null on android', async function () {
+      if (device.getPlatform() === 'android') {
+        should.equal(await firebase.messaging().getAPNSToken(), null);
+      } else {
+        this.skip();
+      }
     });
     it('resolves null on ios if using simulator', async function () {
       if (device.getPlatform() === 'ios') {
@@ -102,59 +142,18 @@ describe('messaging()', function () {
 
   describe('getInitialNotification', function () {
     it('returns null when no initial notification', async function () {
-      should.equal(await firebase.messaging().getInitialNotification(), null);
-    });
-  });
-
-  describe('getToken()', function () {
-    it('throws if authorizedEntity is not a string', function () {
-      try {
-        firebase.messaging().getToken(123);
-        return Promise.reject(new Error('Did not throw Error.'));
-      } catch (e) {
-        e.message.should.containEql("'authorizedEntity' expected a string value");
-        return Promise.resolve();
-      }
-    });
-
-    it('throws if scope is not a string', function () {
-      try {
-        firebase.messaging().getToken('123', 123);
-        return Promise.reject(new Error('Did not throw Error.'));
-      } catch (e) {
-        e.message.should.containEql("'scope' expected a string value");
-        return Promise.resolve();
-      }
+      should.strictEqual(await firebase.messaging().getInitialNotification(), null);
     });
   });
 
   describe('deleteToken()', function () {
-    it('throws if authorizedEntity is not a string', function () {
-      try {
-        firebase.messaging().deleteToken(123);
-        return Promise.reject(new Error('Did not throw Error.'));
-      } catch (e) {
-        e.message.should.containEql("'authorizedEntity' expected a string value");
-        return Promise.resolve();
-      }
-    });
-
-    it('throws if scope is not a string', function () {
-      try {
-        firebase.messaging().deleteToken('123', 123);
-        return Promise.reject(new Error('Did not throw Error.'));
-      } catch (e) {
-        e.message.should.containEql("'scope' expected a string value");
-        return Promise.resolve();
-      }
-    });
-
-    xit('generate a new token after deleting', async function () {
-      // const token1 = await firebase.messaging().getToken();
-
+    it('generate a new token after deleting', async function () {
+      const token1 = await firebase.messaging().getToken();
+      should.exist(token1);
       await firebase.messaging().deleteToken();
-
-      // const token2 = await firebase.messaging().getToken();
+      const token2 = await firebase.messaging().getToken();
+      should.exist(token2);
+      token1.should.not.eql(token2);
     });
   });
 
@@ -249,30 +248,31 @@ describe('messaging()', function () {
       }
     });
 
-    android.it('receives messages when the app is in the background', async () => {
-      // This is slow and thus flaky in CI. It runs locally though.
-      if (global.isCI) {
-        return;
-      }
-      const spy = sinon.spy();
-      const token = await firebase.messaging().getToken();
-      firebase.messaging().setBackgroundMessageHandler(remoteMessage => {
-        spy(remoteMessage);
-        return Promise.resolve();
-      });
+    it('receives messages when the app is in the background', async function () {
+      // This is slow and thus flaky in CI. It runs locally on android though.
+      if (device.getPlatform() === 'android' && !global.isCI) {
+        const spy = sinon.spy();
+        const token = await firebase.messaging().getToken();
+        firebase.messaging().setBackgroundMessageHandler(remoteMessage => {
+          spy(remoteMessage);
+          return Promise.resolve();
+        });
 
-      await device.sendToHome();
-      await TestsAPI.messaging().sendToDevice(token, {
-        data: {
-          foo: 'bar',
-          doop: 'boop',
-        },
-      });
-      await Utils.spyToBeCalledOnceAsync(spy);
-      await device.launchApp({ newInstance: false });
-      spy.firstCall.args[0].should.be.an.Object();
-      spy.firstCall.args[0].data.should.be.an.Object();
-      spy.firstCall.args[0].data.foo.should.eql('bar');
+        await device.sendToHome();
+        await TestsAPI.messaging().sendToDevice(token, {
+          data: {
+            foo: 'bar',
+            doop: 'boop',
+          },
+        });
+        await Utils.spyToBeCalledOnceAsync(spy);
+        await device.launchApp({ newInstance: false });
+        spy.firstCall.args[0].should.be.an.Object();
+        spy.firstCall.args[0].data.should.be.an.Object();
+        spy.firstCall.args[0].data.foo.should.eql('bar');
+      } else {
+        this.skip();
+      }
     });
   });
 

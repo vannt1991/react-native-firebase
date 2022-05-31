@@ -3,7 +3,7 @@ title: Analytics
 description: Installation and getting started with Analytics.
 icon: //static.invertase.io/assets/firebase/analytics.svg
 next: /analytics/screen-tracking
-previous: /admob/european-user-consent
+previous: /contributing
 ---
 
 # Installation
@@ -34,11 +34,11 @@ Analytics collects usage and behavior data for your app. Its two primary concern
 
 <Youtube id="8iZpH7O6zXo" />
 
-Analytics automatically logs some [events](https://support.google.com/analytics/answer/9234069) and [user properties](https://support.google.com/analytics/answer/9268042); you don't need to add any code to enable them. However, Analytics also allows you to log [custom](#Custom-Events) or [predefined](#Predefined-Events) events within your app. How you can do this will be explained below.
+Analytics automatically logs some [events](https://support.google.com/analytics/answer/9234069) and [user properties](https://support.google.com/analytics/answer/9268042); you don't need to add any code to enable them. However, Analytics also allows you to log [custom](#custom-events) or [predefined](#predefined-events) events within your app. How you can do this will be explained below.
 
 # Usage
 
-Analytics offers a wealth of [Predefined Events](#Predefined-Events) to track user behavior. Analytics also offers folks the ability to log [Custom Events](#Custom-Events) . If you're already familiar with Google Analytics, this method is equivalent to using the event command in [gtag.js](https://developers.google.com/gtagjs/).
+Analytics offers a wealth of [Predefined Events](#predefined-events) to track user behavior. Analytics also offers folks the ability to log [Custom Events](#custom-events) . If you're already familiar with Google Analytics, this method is equivalent to using the event command in [gtag.js](https://developers.google.com/gtagjs/).
 
 ## Custom Events
 
@@ -109,16 +109,19 @@ The Analytics package works out of the box, however a number of events are autom
 These event names are called as 'Reserved Events'. Attempting to send any custom event using the `logEvent` method
 with any of the following event names will throw an error.
 
-| Reserved Events Names  |                           |                     |
-| ---------------------- | ------------------------- | ------------------- |
-| `app_clear_data`       | `app_uninstall`           | `app_update`        |
-| `error`                | `first_open`              | `first_visit`       |
-| `first_open_time`      | `first_visit_time`        | `in_app_purchase`   |
-| `notification_dismiss` | `notification_foreground` | `notification_open` |
-| `notification_receive` | `os_update`               | `session_start`     |
-| `screen_view`          | `user_engagement`         | `ad_impression`     |
-| `ad_click`             | `ad_query`                | `ad_exposure`       |
-| `adunit_exposure`      | `ad_activeiew`            |
+| Reserved Events Names            |                                |                                 |
+| -------------------------------- | ------------------------------ | ------------------------------- |
+| `ad_activeview`                  | `ad_click`                     | `ad_exposure`                   |
+| `ad_impression`                  | `ad_query`                     | `ad_reward`                     |
+| `adunit_exposure`                | `app_background`               | `app_clear_data`                |
+| `app_remove`                     | `app_store_refund`             | `app_store_subscription_cancel` |
+| `app_store_subscription_convert` | `app_store_subscription_renew` | `app_update`                    |
+| `app_upgrade`                    | `dynamic_link_app_open`        | `dynamic_link_app_update`       |
+| `dynamic_link_first_open`        | `error`                        | `first_open`                    |
+| `first_visit`                    | `in_app_purchase`              | `notification_dismiss`          |
+| `notification_foreground`        | `notification_open`            | `notification_receive`          |
+| `os_update`                      | `session_start`                | `session_start_with_rollout`    |
+| `user_engagement`                |
 
 ## App instance id
 
@@ -140,7 +143,7 @@ in the Kids category if the app accesses the IDFA iOS symbols.
 Additionally, apps must implement Apples "App Tracking Transparency" (or "ATT") requirements if they access IDFA symbols.
 However, if an app does not use IDFA and otherwise handles data in an ATT-compatible way, it eliminates this ATT requirement.
 
-If avoiding the usage of IDFA is a requirement for your app, you must use firebase-ios-sdk 7.11.0 or greater, then you may define a variable in your Podfile like this:
+If you need to avoid IDFA usage while still using analytics, then you need `firebase-ios-sdk` v7.11.0 or greater and to define the following variable in your Podfile:
 
 ```ruby
 $RNFirebaseAnalyticsWithoutAdIdSupport = true
@@ -153,6 +156,7 @@ and use of Firebase Analytics without needing the App Tracking Transparency hand
 of your app handle data in a way that requires ATT)
 
 Note that for obvious reasons, configuring Firebase Analytics for use without IDFA is incompatible with AdMob
+
 # firebase.json
 
 ## Disable Auto-Initialization
@@ -176,4 +180,18 @@ To re-enable analytics (e.g. once you have the users consent), call the `setAnal
 import { firebase } from '@react-native-firebase/analytics';
 // ...
 await firebase.analytics().setAnalyticsCollectionEnabled(true);
+```
+
+## Disable screenview tracking
+
+Analytics automatically tracks some information about screens in your application, such as the class name of the UIViewController or Activity that is currently in focus.
+Automatic screenview reporting can be turned off/on through `google_analytics_automatic_screen_reporting_enabled` property of `firebase.json` file.
+
+```json
+// <project-root>/firebase.json
+{
+  "react-native": {
+    "google_analytics_automatic_screen_reporting_enabled": false
+  }
+}
 ```

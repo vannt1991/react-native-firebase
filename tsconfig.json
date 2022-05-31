@@ -14,9 +14,10 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "moduleResolution": "node",
-    "skipLibCheck": false,
+    "skipLibCheck": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
     "lib": ["es2015", "es2016", "esnext"]
   },
   "exclude": ["node_modules", "**/*.spec.ts"]

@@ -3,6 +3,236 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [14.11.0](https://github.com/invertase/react-native-firebase/compare/v14.10.1...v14.11.0) (2022-05-27)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+## [14.10.1](https://github.com/invertase/react-native-firebase/compare/v14.10.0...v14.10.1) (2022-05-26)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+# [14.10.0](https://github.com/invertase/react-native-firebase/compare/v14.9.4...v14.10.0) (2022-05-26)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+## [14.9.4](https://github.com/invertase/react-native-firebase/compare/v14.9.3...v14.9.4) (2022-05-14)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+## [14.9.3](https://github.com/invertase/react-native-firebase/compare/v14.9.2...v14.9.3) (2022-05-10)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+## [14.9.2](https://github.com/invertase/react-native-firebase/compare/v14.9.1...v14.9.2) (2022-05-10)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+## [14.9.1](https://github.com/invertase/react-native-firebase/compare/v14.9.0...v14.9.1) (2022-04-28)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+# [14.9.0](https://github.com/invertase/react-native-firebase/compare/v14.8.1...v14.9.0) (2022-04-27)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+## [14.8.1](https://github.com/invertase/react-native-firebase/compare/v14.8.0...v14.8.1) (2022-04-25)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+# [14.8.0](https://github.com/invertase/react-native-firebase/compare/v14.7.0...v14.8.0) (2022-04-19)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+# [14.7.0](https://github.com/invertase/react-native-firebase/compare/v14.6.0...v14.7.0) (2022-03-23)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+# [14.6.0](https://github.com/invertase/react-native-firebase/compare/v14.5.1...v14.6.0) (2022-03-23)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+## [14.5.1](https://github.com/invertase/react-native-firebase/compare/v14.5.0...v14.5.1) (2022-03-05)
+
+### Bug Fixes
+
+- **analytics, ios:** handle RNFirebaseAnalyticsWithoutAdIdSupport == false Podfile case correctly ([#6078](https://github.com/invertase/react-native-firebase/issues/6078)) ([ca82e54](https://github.com/invertase/react-native-firebase/commit/ca82e544255f122478c1de5945138a60118e90d0))
+
+# [14.5.0](https://github.com/invertase/react-native-firebase/compare/v14.4.0...v14.5.0) (2022-02-15)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+# [14.4.0](https://github.com/invertase/react-native-firebase/compare/v14.3.3...v14.4.0) (2022-02-13)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+## [14.3.3](https://github.com/invertase/react-native-firebase/compare/v14.3.2...v14.3.3) (2022-02-12)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+## [14.3.2](https://github.com/invertase/react-native-firebase/compare/v14.3.1...v14.3.2) (2022-02-10)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+## [14.3.1](https://github.com/invertase/react-native-firebase/compare/v14.3.0...v14.3.1) (2022-02-07)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+# [14.3.0](https://github.com/invertase/react-native-firebase/compare/v14.2.4...v14.3.0) (2022-01-26)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+## [14.2.4](https://github.com/invertase/react-native-firebase/compare/v14.2.3...v14.2.4) (2022-01-24)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+## [14.2.3](https://github.com/invertase/react-native-firebase/compare/v14.2.2...v14.2.3) (2022-01-20)
+
+### Bug Fixes
+
+- **analytics, ios:** Convert NSNull values to nil in order to correctly remove user properties ([dbc79c3](https://github.com/invertase/react-native-firebase/commit/dbc79c31810bf9bea4c3a782432c9b5625ad3d5f)), closes [#4931](https://github.com/invertase/react-native-firebase/issues/4931)
+
+## [14.2.2](https://github.com/invertase/react-native-firebase/compare/v14.2.1...v14.2.2) (2022-01-06)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+## [14.2.1](https://github.com/invertase/react-native-firebase/compare/v14.2.0...v14.2.1) (2021-12-31)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+# [14.2.0](https://github.com/invertase/react-native-firebase/compare/v14.1.0...v14.2.0) (2021-12-31)
+
+### Bug Fixes
+
+- **analytics:** correct native types for extend_session parameter ([#5973](https://github.com/invertase/react-native-firebase/issues/5973)) ([23fdf61](https://github.com/invertase/react-native-firebase/commit/23fdf61a613c6cde6d5f3c807a7b13274fa3ab5a))
+
+# [14.1.0](https://github.com/invertase/react-native-firebase/compare/v14.0.1...v14.1.0) (2021-12-18)
+
+### Features
+
+- **analytics, config:** expose automatic screenview reporting toggle ([#5948](https://github.com/invertase/react-native-firebase/issues/5948)) ([8836c01](https://github.com/invertase/react-native-firebase/commit/8836c01dcfa2f478f973a1a54253509c3368d963))
+
+## [14.0.1](https://github.com/invertase/react-native-firebase/compare/v14.0.0...v14.0.1) (2021-12-15)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+# [14.0.0](https://github.com/invertase/react-native-firebase/compare/v13.1.1...v14.0.0) (2021-12-14)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+## [13.1.1](https://github.com/invertase/react-native-firebase/compare/v13.1.0...v13.1.1) (2021-12-14)
+
+### Bug Fixes
+
+- **deps:** AGP7.0.4, firebase-android-sdk 29.0.2, javascript deps ([55d0a36](https://github.com/invertase/react-native-firebase/commit/55d0a36a0addc54e347f26bb8ee88bb38b0fa4a6))
+
+# [13.1.0](https://github.com/invertase/react-native-firebase/compare/v13.0.1...v13.1.0) (2021-12-02)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+## [13.0.1](https://github.com/invertase/react-native-firebase/compare/v13.0.0...v13.0.1) (2021-11-05)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+# [13.0.0](https://github.com/invertase/react-native-firebase/compare/v12.9.3...v13.0.0) (2021-10-31)
+
+### Bug Fixes
+
+- **analytics:** allow custom event parameters for screen_view events ([#5811](https://github.com/invertase/react-native-firebase/issues/5811)) ([02e888e](https://github.com/invertase/react-native-firebase/commit/02e888e782f2b0243f0324f63018ea8b27a68abc)), closes [#4594](https://github.com/invertase/react-native-firebase/issues/4594)
+- rename default branch to main ([25e1d3d](https://github.com/invertase/react-native-firebase/commit/25e1d3d5a1a8311588938dc9d8fdf71d11cd9963))
+
+- fix(analytics)!: add missing reserved event names (#5630) ([2c1958e](https://github.com/invertase/react-native-firebase/commit/2c1958e7eec13afe47d7d46a4bf003258e4c0c26)), closes [#5630](https://github.com/invertase/react-native-firebase/issues/5630)
+
+### BREAKING CHANGES
+
+- some reserved words that were accepted before will throw exceptions now that the list is complete - do not use reserved words for analytics events
+
+## [12.9.3](https://github.com/invertase/react-native-firebase/compare/v12.9.2...v12.9.3) (2021-10-22)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+## [12.9.2](https://github.com/invertase/react-native-firebase/compare/v12.9.1...v12.9.2) (2021-10-17)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+## [12.9.1](https://github.com/invertase/react-native-firebase/compare/v12.9.0...v12.9.1) (2021-10-10)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+# [12.9.0](https://github.com/invertase/react-native-firebase/compare/v12.8.0...v12.9.0) (2021-10-03)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+# [12.8.0](https://github.com/invertase/react-native-firebase/compare/v12.7.5...v12.8.0) (2021-09-14)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+## [12.7.5](https://github.com/invertase/react-native-firebase/compare/v12.7.4...v12.7.5) (2021-09-04)
+
+### Bug Fixes
+
+- **analytics:** allow more than 25 event parameters ([5dde564](https://github.com/invertase/react-native-firebase/commit/5dde56414caf3b79a5b6c4b1c61485789d7b564b))
+
+## [12.7.4](https://github.com/invertase/react-native-firebase/compare/v12.7.3...v12.7.4) (2021-08-31)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+## [12.7.3](https://github.com/invertase/react-native-firebase/compare/v12.7.2...v12.7.3) (2021-08-24)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+## [12.7.2](https://github.com/invertase/react-native-firebase/compare/v12.7.1...v12.7.2) (2021-08-21)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+## [12.7.1](https://github.com/invertase/react-native-firebase/compare/v12.7.0...v12.7.1) (2021-08-20)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+# [12.7.0](https://github.com/invertase/react-native-firebase/compare/v12.6.1...v12.7.0) (2021-08-19)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+## [12.6.1](https://github.com/invertase/react-native-firebase/compare/v12.6.0...v12.6.1) (2021-08-17)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+# [12.6.0](https://github.com/invertase/react-native-firebase/compare/v12.5.0...v12.6.0) (2021-08-16)
+
+### Features
+
+- **analytics, config:** expose all the native data collection toggles ([f5eaffb](https://github.com/invertase/react-native-firebase/commit/f5eaffbfaf7e165b205692dd5b1b16e87b09d5a2))
+- **app, config:** implement app_data_collection_default_enabled firebase.json key ([1e47d45](https://github.com/invertase/react-native-firebase/commit/1e47d455aa3a99b4ad6e08caf491be3df63a7f55))
+
+# [12.5.0](https://github.com/invertase/react-native-firebase/compare/v12.4.0...v12.5.0) (2021-08-12)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+# [12.4.0](https://github.com/invertase/react-native-firebase/compare/v12.3.0...v12.4.0) (2021-07-29)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+# [12.3.0](https://github.com/invertase/react-native-firebase/compare/v12.2.0...v12.3.0) (2021-07-21)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+# [12.2.0](https://github.com/invertase/react-native-firebase/compare/v12.1.0...v12.2.0) (2021-07-16)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+# [12.1.0](https://github.com/invertase/react-native-firebase/compare/v12.0.0...v12.1.0) (2021-06-11)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+# [12.0.0](https://github.com/invertase/react-native-firebase/compare/v11.5.0...v12.0.0) (2021-05-19)
+
+**Note:** Version bump only for package @react-native-firebase/analytics
+
+# [11.5.0](https://github.com/invertase/react-native-firebase/compare/v11.4.1...v11.5.0) (2021-05-12)
+
+### Features
+
+- **analytics:** Adding default event parameters ([#5246](https://github.com/invertase/react-native-firebase/issues/5246)) ([684bb50](https://github.com/invertase/react-native-firebase/commit/684bb50368cb797ae9fda8fb56df2e2376d59c30))
+
 ## [11.4.1](https://github.com/invertase/react-native-firebase/compare/v11.4.0...v11.4.1) (2021-04-29)
 
 **Note:** Version bump only for package @react-native-firebase/analytics

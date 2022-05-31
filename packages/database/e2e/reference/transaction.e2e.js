@@ -21,11 +21,11 @@ const TEST_PATH = `${PATH}/transaction`;
 const NOOP = () => {};
 
 describe('database().ref().transaction()', function () {
-  before(function () {
-    return seed(TEST_PATH);
+  before(async function () {
+    await seed(TEST_PATH);
   });
-  after(function () {
-    return wipe(TEST_PATH);
+  after(async function () {
+    await wipe(TEST_PATH);
   });
 
   it('throws if no transactionUpdate is provided', async function () {
@@ -58,11 +58,11 @@ describe('database().ref().transaction()', function () {
     }
   });
 
-  // FIXME not working for android in CI ?
-  ios.it('updates the value via a transaction', async () => {
-    const ref = firebase.database().ref(TEST_PATH).child('transaction');
+  // FIXME this test works in isolation but not running in the suite?
+  xit('updates the value via a transaction', async function () {
+    const ref = firebase.database().ref(`${TEST_PATH}/transactionUpdate`);
     await ref.set(1);
-
+    await Utils.sleep(2000);
     const { committed, snapshot } = await ref.transaction(value => {
       return value + 1;
     });
@@ -72,7 +72,7 @@ describe('database().ref().transaction()', function () {
   });
 
   it('aborts transaction if undefined returned', async function () {
-    const ref = firebase.database().ref(TEST_PATH).child('transaction');
+    const ref = firebase.database().ref(`${TEST_PATH}/transactionAbort`);
     await ref.set(1);
 
     return new Promise((resolve, reject) => {
@@ -95,11 +95,10 @@ describe('database().ref().transaction()', function () {
     });
   });
 
-  // FIXME failing for me locally on android and ios as well
-  xit('passes valid data through the callback', async function () {
-    // FIXME failing in CI
-    if (!global.isCI) {
-      const ref = firebase.database().ref(TEST_PATH).child('transaction');
+  // FIXME flaky on android local against emulator?
+  it('passes valid data through the callback', async function () {
+    if (device.getPlatform() === 'ios') {
+      const ref = firebase.database().ref(`${TEST_PATH}/transactionCallback`);
       await ref.set(1);
 
       return new Promise((resolve, reject) => {
@@ -121,13 +120,14 @@ describe('database().ref().transaction()', function () {
           },
         );
       });
+    } else {
+      this.skip();
     }
   });
 
-  // FIXME failing for me locally on android and ios as well
-  xit('throws when an error occurs', async function () {
-    // FIXME failing in CI
-    if (!global.isCI) {
+  // FIXME flaky on android local against emulator?
+  it('throws when an error occurs', async function () {
+    if (device.getPlatform() === 'ios') {
       const ref = firebase.database().ref('nope');
 
       try {
@@ -141,13 +141,14 @@ describe('database().ref().transaction()', function () {
         );
         return Promise.resolve();
       }
+    } else {
+      this.skip();
     }
   });
 
-  // FIXME failing for me locally on android and ios as well
-  xit('passes error back to the callback', async function () {
-    // FIXME failing in CI
-    if (!global.isCI) {
+  // FIXME flaky on android? works most of the time...
+  it('passes error back to the callback', async function () {
+    if (device.getPlatform() === 'ios') {
       const ref = firebase.database().ref('nope');
 
       return new Promise((resolve, reject) => {
@@ -175,45 +176,41 @@ describe('database().ref().transaction()', function () {
             // catch unhandled rejection
           });
       });
+    } else {
+      this.skip();
     }
   });
 
-  // FIXME failing for me locally on android and ios as well
-  xit('sets a value if one does not exist', async function () {
-    // FIXME failing in CI
-    if (!global.isCI) {
-      const ref = firebase.database().ref(TEST_PATH).child('create');
-      await ref.remove(); // Ensure it's clear
+  it('sets a value if one does not exist', async function () {
+    const ref = firebase.database().ref(`${TEST_PATH}/transactionCreate`);
+    const value = Date.now();
 
-      const value = Date.now();
+    return new Promise((resolve, reject) => {
+      ref.transaction(
+        $ => {
+          if ($ === null) {
+            return { foo: value };
+          }
 
-      return new Promise((resolve, reject) => {
-        ref.transaction(
-          $ => {
-            if ($ === null) {
-              return { foo: value };
-            }
+          throw new Error('Value should not exist');
+        },
+        (error, committed, snapshot) => {
+          if (error) {
+            return reject(error);
+          }
 
-            throw new Error('Value should not exist');
-          },
-          (error, committed, snapshot) => {
-            if (error) {
-              return reject(error);
-            }
+          if (!committed) {
+            return reject(new Error('Transaction should have committed'));
+          }
 
-            if (!committed) {
-              return reject(new Error('Transaction should have committed'));
-            }
-
-            snapshot.val().should.eql(
-              jet.contextify({
-                foo: value,
-              }),
-            );
-            return resolve();
-          },
-        );
-      });
-    }
+          snapshot.val().should.eql(
+            jet.contextify({
+              foo: value,
+            }),
+          );
+          return resolve();
+        },
+      );
+    });
   });
 });

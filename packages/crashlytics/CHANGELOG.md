@@ -3,6 +3,236 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [14.11.0](https://github.com/invertase/react-native-firebase/compare/v14.10.1...v14.11.0) (2022-05-27)
+
+### Features
+
+- **android, sdk:** firebase-android-sdk 30.1.0 ([b0462d4](https://github.com/invertase/react-native-firebase/commit/b0462d4d34d1518a50daeca09288bf4aa0e0f695))
+
+## [14.10.1](https://github.com/invertase/react-native-firebase/compare/v14.10.0...v14.10.1) (2022-05-26)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+# [14.10.0](https://github.com/invertase/react-native-firebase/compare/v14.9.4...v14.10.0) (2022-05-26)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+## [14.9.4](https://github.com/invertase/react-native-firebase/compare/v14.9.3...v14.9.4) (2022-05-14)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+## [14.9.3](https://github.com/invertase/react-native-firebase/compare/v14.9.2...v14.9.3) (2022-05-10)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+## [14.9.2](https://github.com/invertase/react-native-firebase/compare/v14.9.1...v14.9.2) (2022-05-10)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+## [14.9.1](https://github.com/invertase/react-native-firebase/compare/v14.9.0...v14.9.1) (2022-04-28)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+# [14.9.0](https://github.com/invertase/react-native-firebase/compare/v14.8.1...v14.9.0) (2022-04-27)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+## [14.8.1](https://github.com/invertase/react-native-firebase/compare/v14.8.0...v14.8.1) (2022-04-25)
+
+### Bug Fixes
+
+- **app, expo:** Support RN 0.68 Obj-C++ AppDelegate ([#6213](https://github.com/invertase/react-native-firebase/issues/6213)) ([6f2d7e1](https://github.com/invertase/react-native-firebase/commit/6f2d7e1608d04613b77461f9647802aa1058e6cc))
+
+# [14.8.0](https://github.com/invertase/react-native-firebase/compare/v14.7.0...v14.8.0) (2022-04-19)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+# [14.7.0](https://github.com/invertase/react-native-firebase/compare/v14.6.0...v14.7.0) (2022-03-23)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+# [14.6.0](https://github.com/invertase/react-native-firebase/compare/v14.5.1...v14.6.0) (2022-03-23)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+## [14.5.1](https://github.com/invertase/react-native-firebase/compare/v14.5.0...v14.5.1) (2022-03-05)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+# [14.5.0](https://github.com/invertase/react-native-firebase/compare/v14.4.0...v14.5.0) (2022-02-15)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+# [14.4.0](https://github.com/invertase/react-native-firebase/compare/v14.3.3...v14.4.0) (2022-02-13)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+## [14.3.3](https://github.com/invertase/react-native-firebase/compare/v14.3.2...v14.3.3) (2022-02-12)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+## [14.3.2](https://github.com/invertase/react-native-firebase/compare/v14.3.1...v14.3.2) (2022-02-10)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+## [14.3.1](https://github.com/invertase/react-native-firebase/compare/v14.3.0...v14.3.1) (2022-02-07)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+# [14.3.0](https://github.com/invertase/react-native-firebase/compare/v14.2.4...v14.3.0) (2022-01-26)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+## [14.2.4](https://github.com/invertase/react-native-firebase/compare/v14.2.3...v14.2.4) (2022-01-24)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+## [14.2.3](https://github.com/invertase/react-native-firebase/compare/v14.2.2...v14.2.3) (2022-01-20)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+## [14.2.2](https://github.com/invertase/react-native-firebase/compare/v14.2.1...v14.2.2) (2022-01-06)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+## [14.2.1](https://github.com/invertase/react-native-firebase/compare/v14.2.0...v14.2.1) (2021-12-31)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+# [14.2.0](https://github.com/invertase/react-native-firebase/compare/v14.1.0...v14.2.0) (2021-12-31)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+# [14.1.0](https://github.com/invertase/react-native-firebase/compare/v14.0.1...v14.1.0) (2021-12-18)
+
+### Bug Fixes
+
+- **crashlytics, ios:** alter header import style for Expo SDK 44 compat ([#5947](https://github.com/invertase/react-native-firebase/issues/5947)) ([e45f37c](https://github.com/invertase/react-native-firebase/commit/e45f37cf76eba80f5fd537b6b7806c79f7052a74))
+
+## [14.0.1](https://github.com/invertase/react-native-firebase/compare/v14.0.0...v14.0.1) (2021-12-15)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+# [14.0.0](https://github.com/invertase/react-native-firebase/compare/v13.1.1...v14.0.0) (2021-12-14)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+## [13.1.1](https://github.com/invertase/react-native-firebase/compare/v13.1.0...v13.1.1) (2021-12-14)
+
+### Bug Fixes
+
+- **deps:** AGP7.0.4, firebase-android-sdk 29.0.2, javascript deps ([55d0a36](https://github.com/invertase/react-native-firebase/commit/55d0a36a0addc54e347f26bb8ee88bb38b0fa4a6))
+
+# [13.1.0](https://github.com/invertase/react-native-firebase/compare/v13.0.1...v13.1.0) (2021-12-02)
+
+### Features
+
+- **sdks:** firebase-ios-sdk 8.10.0 / firebase-android-sdk 29.0.1 ([f6949c9](https://github.com/invertase/react-native-firebase/commit/f6949c9f3669df6d8b3f78bbee97bee2f36b7df3))
+
+## [13.0.1](https://github.com/invertase/react-native-firebase/compare/v13.0.0...v13.0.1) (2021-11-05)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+# [13.0.0](https://github.com/invertase/react-native-firebase/compare/v12.9.3...v13.0.0) (2021-10-31)
+
+### Bug Fixes
+
+- rename default branch to main ([25e1d3d](https://github.com/invertase/react-native-firebase/commit/25e1d3d5a1a8311588938dc9d8fdf71d11cd9963))
+
+- feat(sdks, android)!: firebase-android-sdk v29 / minSdkVersion API19 / target+compile API31 (#5825) ([f60afe1](https://github.com/invertase/react-native-firebase/commit/f60afe158b2dc823bd7169e36c3e428470576c7e)), closes [#5825](https://github.com/invertase/react-native-firebase/issues/5825)
+
+### BREAKING CHANGES
+
+- firebase-android-sdk 29 requires android/build.gradle minSdkVersion 19 (as required in react-native 0.64+)
+
+## [12.9.3](https://github.com/invertase/react-native-firebase/compare/v12.9.2...v12.9.3) (2021-10-22)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+## [12.9.2](https://github.com/invertase/react-native-firebase/compare/v12.9.1...v12.9.2) (2021-10-17)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+## [12.9.1](https://github.com/invertase/react-native-firebase/compare/v12.9.0...v12.9.1) (2021-10-10)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+# [12.9.0](https://github.com/invertase/react-native-firebase/compare/v12.8.0...v12.9.0) (2021-10-03)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+# [12.8.0](https://github.com/invertase/react-native-firebase/compare/v12.7.5...v12.8.0) (2021-09-14)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+## [12.7.5](https://github.com/invertase/react-native-firebase/compare/v12.7.4...v12.7.5) (2021-09-04)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+## [12.7.4](https://github.com/invertase/react-native-firebase/compare/v12.7.3...v12.7.4) (2021-08-31)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+## [12.7.3](https://github.com/invertase/react-native-firebase/compare/v12.7.2...v12.7.3) (2021-08-24)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+## [12.7.2](https://github.com/invertase/react-native-firebase/compare/v12.7.1...v12.7.2) (2021-08-21)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+## [12.7.1](https://github.com/invertase/react-native-firebase/compare/v12.7.0...v12.7.1) (2021-08-20)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+# [12.7.0](https://github.com/invertase/react-native-firebase/compare/v12.6.1...v12.7.0) (2021-08-19)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+## [12.6.1](https://github.com/invertase/react-native-firebase/compare/v12.6.0...v12.6.1) (2021-08-17)
+
+### Bug Fixes
+
+- **crashlytics, config:** handle new app_data_collection_default_enabled key ([81aa17f](https://github.com/invertase/react-native-firebase/commit/81aa17f1b60a6171329d9a2f250226010dfc081e))
+
+# [12.6.0](https://github.com/invertase/react-native-firebase/compare/v12.5.0...v12.6.0) (2021-08-16)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+# [12.5.0](https://github.com/invertase/react-native-firebase/compare/v12.4.0...v12.5.0) (2021-08-12)
+
+### Bug Fixes
+
+- **expo:** do not publish plugin tests and sources ([#5565](https://github.com/invertase/react-native-firebase/issues/5565)) ([6b5dca5](https://github.com/invertase/react-native-firebase/commit/6b5dca500ea413ee68acf8abc74e579f4298cbad))
+
+# [12.4.0](https://github.com/invertase/react-native-firebase/compare/v12.3.0...v12.4.0) (2021-07-29)
+
+### Features
+
+- Add Expo config plugin ([#5480](https://github.com/invertase/react-native-firebase/issues/5480)) ([832057c](https://github.com/invertase/react-native-firebase/commit/832057cfbdf1778ad2141a1ad4466d2e8c24b8ce))
+
+# [12.3.0](https://github.com/invertase/react-native-firebase/compare/v12.2.0...v12.3.0) (2021-07-21)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+# [12.2.0](https://github.com/invertase/react-native-firebase/compare/v12.1.0...v12.2.0) (2021-07-16)
+
+### Features
+
+- **crashlytics:** add helper methods for log and setCustomKey ([06d515c](https://github.com/invertase/react-native-firebase/commit/06d515cad533c76328e324f0e950a814881aab0d))
+
+# [12.1.0](https://github.com/invertase/react-native-firebase/compare/v12.0.0...v12.1.0) (2021-06-11)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+# [12.0.0](https://github.com/invertase/react-native-firebase/compare/v11.5.0...v12.0.0) (2021-05-19)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
+# [11.5.0](https://github.com/invertase/react-native-firebase/compare/v11.4.1...v11.5.0) (2021-05-12)
+
+**Note:** Version bump only for package @react-native-firebase/crashlytics
+
 ## [11.4.1](https://github.com/invertase/react-native-firebase/compare/v11.4.0...v11.4.1) (2021-04-29)
 
 **Note:** Version bump only for package @react-native-firebase/crashlytics

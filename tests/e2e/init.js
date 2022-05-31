@@ -18,6 +18,7 @@
 require('./globals');
 
 const detox = require('detox');
+const { execSync } = require('child_process');
 const jet = require('jet/platform/node');
 
 const { detox: config } = require('../package.json');
@@ -27,6 +28,7 @@ config.configurations['android.emu.debug'].device.avdName =
 
 before(async function () {
   await detox.init(config);
+  await device.launchApp();
   await jet.init();
 });
 
@@ -44,12 +46,43 @@ beforeEach(async function beforeEach() {
       console.warn(`   🔴  Retry #${retry - 1} failed...`);
     }
 
-    console.warn(`️   ->  Retrying in ${1 * retry} seconds ... (${retry})`);
+    console.warn(`️   ->  Retrying in ${5 * retry} seconds ... (${retry})`);
     await Utils.sleep(5000 * retry);
   }
 });
 
 after(async function () {
   console.log(' ✨ Tests Complete ✨ ');
-  await device.terminateApp();
+  const isAndroid = detox.device.getPlatform() === 'android';
+  const deviceId = detox.device.id;
+
+  // emits 'cleanup' across socket, which goes native, terminates Detox test Looper
+  // This returns control to the java code in our instrumented test, and then Instrumentation lifecycle finishes cleanly
+  // await Utils.sleep(5000); // give async processes (like Firestore writes) time to complete
+  await detox.cleanup();
+  // await Utils.sleep(5000); // give client app time to dump coverage report
+
+  // Get the file off the device, into standard location for JaCoCo binary report
+  // It will still need processing via gradle jacocoAndroidTestReport task for codecov, but it's available now
+  if (isAndroid) {
+    const pkg = 'com.invertase.testing';
+    const emuOrig = `/data/user/0/${pkg}/files/coverage.ec`;
+    const emuDest = '/data/local/tmp/detox/coverage.ec';
+    const localDestDir = './android/app/build/output/coverage/';
+
+    try {
+      execSync(`adb -s ${deviceId} shell "run-as ${pkg} cat ${emuOrig} > ${emuDest}"`);
+      execSync(`mkdir -p ${localDestDir}`);
+      execSync(`adb -s ${deviceId} pull ${emuDest} ${localDestDir}/emulator_coverage.ec`);
+      console.log(`Coverage data downloaded to: ${localDestDir}/emulator_coverage.ec`);
+    } catch (e) {
+      console.log('Unable to download coverage data from device: ', JSON.stringify(e));
+    }
+  }
+
+  try {
+    await device.terminateApp();
+  } catch (e) {
+    console.log('Unable to terminate app?', e);
+  }
 });

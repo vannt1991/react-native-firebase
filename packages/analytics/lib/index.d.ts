@@ -209,10 +209,10 @@ export namespace FirebaseAnalyticsTypes {
     cp1?: string;
   }
 
-  /**
-   * Unsupported in "Enhanced Ecommerce reports":
-   * https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event#public-static-final-string-checkout_progress
-   */
+  //
+  // Unsupported in "Enhanced Ecommerce reports":
+  // https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event#public-static-final-string-checkout_progress
+  //
   // export interface CheckoutProgressEventParameters {
   //   checkout_step: string;
   //   checkout_options: string;
@@ -344,6 +344,10 @@ export namespace FirebaseAnalyticsTypes {
      * Current class associated with the view the user is currently viewing.
      */
     screen_class?: string;
+    /**
+     * Custom event parameters.
+     */
+    [key: string]: any;
   }
 
   export interface RefundEventParameters {
@@ -642,7 +646,12 @@ export namespace FirebaseAnalyticsTypes {
    */
   export class Module extends FirebaseModule {
     /**
-     * Log a custom event with optional params.
+     * Log a custom event with optional params. Note that there are various limits that applied
+     * to event parameters (total parameter count, etc), but analytics applies the limits during
+     * cloud processing, the errors will not be seen as Promise rejections when you call logEvent.
+     * While integrating this API in your app you are strongly encouraged to enable
+     * [DebugView](https://firebase.google.com/docs/analytics/debugview) -
+     * any errors in your events will show up in the firebase web console with links to relevant documentation
      *
      * #### Example
      *

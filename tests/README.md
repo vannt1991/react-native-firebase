@@ -6,9 +6,9 @@ Our tests are powered by [Jet ✈️](https://github.com/invertase/jet).
 
 ## Requirements
 
-- Make sure you have Xcode installed (tested with Xcode 10+).
-- Make sure you have Node.js installed (version 8.4.0 and above is required).
-- Make sure you have all required dependencies installed:
+- Make sure you have Xcode installed (tested with Xcode 13+) to develop iOS items
+- Make sure you have Node.js installed with yarn installed globally (node version 16, yarn v1 is required).
+- Make sure you have all required iOS dependencies installed:
 
   - [Apple Sim Utils](https://github.com/wix/AppleSimulatorUtils):
 
@@ -36,7 +36,7 @@ yarn build:all:clean
 
 ```bash
 yarn
-yarn tests:ios:pod:install
+yarn tests:ios:pod:install  # for iOS development
 ```
 
 ---
@@ -66,7 +66,8 @@ As always; the first build for each platform will take a while. Subsequent build
 #### Android
 
 ```bash
-yarn tests:android:build
+yarn tests:android:build # If on linuxu or macOS, or...
+yarn tests:android:build:windows # If you are on windows
 ```
 
 #### iOS
@@ -87,7 +88,8 @@ With iOS Detox will start a simulator for you by default or run tests in an open
 For the Firestore emulator you need to install the tools and start the emulator:
 
 ```bash
-yarn tests:emulator:start
+yarn tests:emulator:start # for linux/macOS-hosted development, or...
+yarn tests:emulator:start:windows # if developing on windows
 ```
 
 ---

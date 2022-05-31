@@ -42,6 +42,11 @@ describe('Auth', function () {
       const bar = auth().useEmulator('http://127.0.0.1:9099');
       expect(bar).toEqual(['10.0.2.2', 9099]);
     });
+
+    it('useEmulator allows hyphens in the hostname', function () {
+      const result = auth().useEmulator('http://my-host:9099');
+      expect(result).toEqual(['my-host', 9099]);
+    });
   });
 
   describe('tenantId', function () {
@@ -56,7 +61,7 @@ describe('Auth', function () {
       try {
         await firebase.app().auth().setTenantId(Object());
         return Promise.reject('It should throw an error');
-      } catch (e) {
+      } catch (e: any) {
         expect(e.message).toBe("firebase.auth().setTenantId(*) expected 'tenantId' to be a string");
         return Promise.resolve('Error catched');
       }

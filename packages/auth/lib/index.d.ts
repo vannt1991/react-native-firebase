@@ -826,11 +826,10 @@ export namespace FirebaseAuthTypes {
    */
   export interface AuthSettings {
     /**
-     * iOS only flag to disable app verification for the purpose of testing phone authentication. For this property to take effect, it needs to be set before rendering a reCAPTCHA app verifier. When this is disabled, a mock reCAPTCHA is rendered instead. This is useful for manual testing during development or for automated integration tests.
+     * Flag to disable app verification for the purpose of testing phone authentication. For this property to take effect, it needs to be set before rendering a reCAPTCHA app verifier. When this is disabled, a mock reCAPTCHA is rendered instead. This is useful for manual testing during development or for automated integration tests.
      *
      * > In order to use this feature, you will need to [whitelist your phone number](https://firebase.google.com/docs/auth/web/phone-auth#test-with-whitelisted-phone-numbers) via the Firebase Console.
      *
-     * @ios
      * @param disabled Boolean value representing whether app verification should be disabled for testing.
      */
     appVerificationDisabledForTesting: boolean;
@@ -1295,6 +1294,7 @@ export namespace FirebaseAuthTypes {
 
     /**
      * Listen for changes in ID token.
+     * ID token can be verified (if desired) using the [admin SDK or a 3rd party JWT library](https://firebase.google.com/docs/auth/admin/verify-id-tokens)
      * This method returns a unsubscribe function to stop listening to events.
      * Always ensure you unsubscribe from the listener when no longer needed to prevent updates to components no longer in use.
      *

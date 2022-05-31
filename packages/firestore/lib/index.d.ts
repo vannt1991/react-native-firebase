@@ -429,7 +429,7 @@ export namespace FirebaseFirestoreTypes {
      * @param data A map of the fields and values for the document.
      * @param options An object to configure the set behavior.
      */
-    set(data: T, options?: SetOptions): Promise<void>;
+    set(data: SetValue<T>, options?: SetOptions): Promise<void>;
 
     /**
      * Updates fields in the document referred to by this `DocumentReference`. The update will fail
@@ -448,7 +448,7 @@ export namespace FirebaseFirestoreTypes {
      *
      * @param data An object containing the fields and values with which to update the document. Fields can contain dots to reference nested fields within the document.
      */
-    update(data: Partial<{ [K in keyof T]: T[K] | FieldValue }>): Promise<void>;
+    update(data: Partial<SetValue<T>>): Promise<void>;
 
     /**
      * Updates fields in the document referred to by this DocumentReference. The update will fail if
@@ -719,6 +719,10 @@ export namespace FirebaseFirestoreTypes {
      *   loginCount: increment,
      * });
      * ```
+     *
+     * Please be careful using this operator. It may not be reliable enough for use in circumstances where absolute accuracy is required,
+     * as it appears writes to Firestore may sometimes be duplicated in situations not fully understood yet, but possibly correlated with
+     * write frequency. See https://github.com/invertase/react-native-firebase/discussions/5914
      *
      * @param n The value to increment by.
      */
@@ -1411,14 +1415,34 @@ export namespace FirebaseFirestoreTypes {
      * Note: on android, hosts 'localhost' and '127.0.0.1' are automatically remapped to '10.0.2.2' (the
      * "host" computer IP address for android emulators) to make the standard development experience easy.
      * If you want to use the emulator on a real android device, you will need to specify the actual host
-     * computer IP address.
+     * computer IP address. Use of this property for emulator connection is deprecated. Use useEmulator instead
      */
     host?: string;
 
     /**
-     * Whether to use SSL when connecting.
+     * Whether to use SSL when connecting. A true value is incompatible with the firestore emulator.
      */
     ssl?: boolean;
+
+    /**
+     * Whether to skip nested properties that are set to undefined during object serialization.
+     * If set to true, these properties are skipped and not written to Firestore.
+     * If set to false or omitted, the SDK throws an exception when it encounters properties of type undefined.
+     */
+    ignoreUndefinedProperties?: boolean;
+
+    /**
+     * If set, controls the return value for server timestamps that have not yet been set to their final value.
+     *
+     * By specifying 'estimate', pending server timestamps return an estimate based on the local clock.
+     * This estimate will differ from the final value and cause these values to change once the server result becomes available.
+     *
+     * By specifying 'previous', pending timestamps will be ignored and return their previous value instead.
+     *
+     * If omitted or set to 'none', null will be returned by default until the server value becomes available.
+     *
+     */
+    serverTimestampBehavior?: 'estimate' | 'previous' | 'none';
   }
 
   /**
@@ -1810,6 +1834,44 @@ export namespace FirebaseFirestoreTypes {
   }
 
   /**
+   * Represents the state of bundle loading tasks.
+   *
+   * Both 'Error' and 'Success' are sinking state: task will abort or complete and there will be no more
+   * updates after they are reported.
+   */
+  export type TaskState = 'Error' | 'Running' | 'Success';
+
+  /**
+   * Represents a progress update or a final state from loading bundles.
+   */
+  export interface LoadBundleTaskProgress {
+    /**
+     * How many bytes have been loaded.
+     */
+    bytesLoaded: number;
+
+    /**
+     * How many documents have been loaded.
+     */
+    documentsLoaded: number;
+
+    /**
+     * Current task state.
+     */
+    taskState: TaskState;
+
+    /**
+     * How many bytes are in the bundle being loaded.
+     */
+    totalBytes: number;
+
+    /**
+     * How many documents are in the bundle being loaded.
+     */
+    totalDocuments: number;
+  }
+
+  /**
    * `firebase.firestore.X`
    */
   export interface Statics {
@@ -2005,6 +2067,29 @@ export namespace FirebaseFirestoreTypes {
      */
     settings(settings: Settings): Promise<void>;
     /**
+     * Loads a Firestore bundle into the local cache.
+     *
+     * #### Example
+     *
+     * ```js
+     * const resp = await fetch('/createBundle');
+     * const bundleString = await resp.text();
+     * await firestore().loadBundle(bundleString);
+     * ```
+     */
+    loadBundle(bundle: string): Promise<LoadBundleTaskProgress>;
+    /**
+     * Reads a Firestore Query from local cache, identified by the given name.
+     *
+     * #### Example
+     *
+     * ```js
+     * const query = firestore().namedQuery('latest-stories-query');
+     * const storiesSnap = await query.get({ source: 'cache' });
+     * ```
+     */
+    namedQuery<T extends DocumentData = DocumentData>(name: string): Query<T>;
+    /**
      * Aimed primarily at clearing up any data cached from running tests. Needs to be executed before any database calls
      * are made.
      *
@@ -2044,7 +2129,33 @@ export namespace FirebaseFirestoreTypes {
      * ```
      */
     terminate(): Promise<void>;
+
+    /**
+     * Modify this Firestore instance to communicate with the Firebase Firestore emulator.
+     * This must be called before any other calls to Firebase Firestore to take effect.
+     * Do not use with production credentials as emulator traffic is not encrypted.
+     *
+     * Note: on android, hosts 'localhost' and '127.0.0.1' are automatically remapped to '10.0.2.2' (the
+     * "host" computer IP address for android emulators) to make the standard development experience easy.
+     * If you want to use the emulator on a real android device, you will need to specify the actual host
+     * computer IP address.
+     *
+     * @param host: emulator host (eg, 'localhost')
+     * @param port: emulator port (eg, 8080)
+     */
+    useEmulator(host: string, port: number): void;
   }
+
+  /**
+   * Utility type to allow FieldValue and to allow Date in place of Timestamp objects.
+   */
+  export type SetValue<T> = T extends Timestamp
+    ? Timestamp | Date // allow Date in place of Timestamp
+    : T extends object
+    ? {
+        [P in keyof T]: SetValue<T[P]> | FieldValue; // allow FieldValue in place of values
+      }
+    : T;
 }
 
 declare const defaultExport: ReactNativeFirebase.FirebaseModuleWithStaticsAndApp<

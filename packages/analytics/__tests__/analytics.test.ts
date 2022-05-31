@@ -39,7 +39,7 @@ describe('Analytics', function () {
         // @ts-ignore test
         firebase.app().analytics('foo', 'arg2');
         return Promise.reject(new Error('Did not throw'));
-      } catch (e) {
+      } catch (e: any) {
         e.message.should.containEql('does not support multiple Firebase Apps');
         return Promise.resolve();
       }
@@ -130,20 +130,19 @@ describe('Analytics', function () {
       );
     });
 
-    it('errors if more than 25 params provided', function () {
-      expect(() =>
-        firebase.analytics().logEvent('invertase', Object.assign({}, new Array(26).fill(1))),
-      ).toThrowError(
-        "firebase.analytics().logEvent(_, *) 'params' maximum number of parameters exceeded (25).",
-      );
-    });
-
     describe('logScreenView()', function () {
       it('errors if param is not an object', function () {
         // @ts-ignore test
         expect(() => firebase.analytics().logScreenView(123)).toThrowError(
           'firebase.analytics().logScreenView(*):',
         );
+      });
+      it('accepts arbitrary custom event parameters while rejecting defined parameters with wrong types', function () {
+        expect(() => firebase.analytics().logScreenView({ foo: 'bar' })).not.toThrow();
+        expect(() =>
+          // @ts-ignore test
+          firebase.analytics().logScreenView({ screen_name: 123, foo: 'bar' }),
+        ).toThrowError('firebase.analytics().logScreenView(*):');
       });
     });
 

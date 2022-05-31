@@ -6,15 +6,15 @@ on:
       - '**'
   push:
     branches:
-      - master
+      - main
 
 jobs:
   linting:
-    name: ESLint
+    name: Lint
     timeout-minutes: 15
     runs-on: ubuntu-latest
     steps:
-      - uses: styfle/cancel-workflow-action@0.9.0
+      - uses: styfle/cancel-workflow-action@0.9.1
         with:
           all_but_latest: true
       - uses: actions/checkout@v2
@@ -22,7 +22,12 @@ jobs:
           fetch-depth: 1
       - uses: actions/setup-node@v2
         with:
-          node-version: 14
+          node-version: 16
+      - name: Configure JDK 1.11
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '11'
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
@@ -41,28 +46,19 @@ jobs:
           max_attempts: 3
           command: yarn --no-audit --prefer-offline
       - name: Lint
-        run: yarn lint
-      - name: Save Code Linting Report JSON
-        run: yarn lint:report
-        continue-on-error: true
-      - name: Annotate Code Linting Results
-        uses: ataylorme/eslint-annotate-action@1.1.2
-        continue-on-error: true
+        uses: nick-invision/retry@v2
         with:
-          repo-token: '${{ secrets.GITHUB_TOKEN }}'
-          report-json: 'eslint-report.json'
-      - name: Upload ESLint report
-        uses: actions/upload-artifact@v2
-        with:
-          name: eslint-report.json
-          path: eslint-report.json
+          timeout_minutes: 3
+          retry_wait_seconds: 10
+          max_attempts: 3
+          command: yarn lint
 
   typescript:
     name: TypeScript Build Validation
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: styfle/cancel-workflow-action@0.9.0
+      - uses: styfle/cancel-workflow-action@0.9.1
         with:
           all_but_latest: true
       - uses: actions/checkout@v2
@@ -70,7 +66,7 @@ jobs:
           fetch-depth: 1
       - uses: actions/setup-node@v2
         with:
-          node-version: 14
+          node-version: 16
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
@@ -96,7 +92,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: styfle/cancel-workflow-action@0.9.0
+      - uses: styfle/cancel-workflow-action@0.9.1
         with:
           all_but_latest: true
       - uses: actions/checkout@v2
@@ -104,7 +100,7 @@ jobs:
           fetch-depth: 1
       - uses: actions/setup-node@v2
         with:
-          node-version: 14
+          node-version: 16
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
